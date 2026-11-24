@@ -1,0 +1,16 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "FirstScriptData",
+  "namespace" : "tutorial.part2",
+  "comment" : "Guide 2.4: a name and its greeting.",
+  "fields" : [
+    {
+      "name" : "name",
+      "comment" : "The name to greet"
+    },
+    {
+      "name" : "greeting",
+      "comment" : "The greeting built from the name"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "DataClassesData",
+  "namespace" : "tutorial.part2",
+  "comment" : "Guide 2.2: the data of a holiday request.",
+  "fields" : [
+    {
+      "name" : "employeeId",
+      "comment" : "Personnel number of the employee, with its leading zeros"
+    },
+    {
+      "name" : "days",
+      "type" : "Number",
+      "comment" : "How many days of holiday are asked for"
+    },
+    {
+      "name" : "approved",
+      "type" : "Boolean",
+      "comment" : "Whether the request is approved"
+    }
+  ]
+}

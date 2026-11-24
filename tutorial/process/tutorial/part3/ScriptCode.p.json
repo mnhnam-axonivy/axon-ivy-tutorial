@@ -1,0 +1,76 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E532",
+  "config" : {
+    "data" : "tutorial.part3.ScriptCodeData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Ship a parcel",
+      "config" : {
+        "signature" : "ship",
+        "input" : {
+          "params" : [
+            { "name" : "weight", "type" : "Number", "desc" : "Weight of the parcel in kg" },
+            { "name" : "country", "type" : "String", "desc" : "Country code of the address" },
+            { "name" : "express", "type" : "Boolean", "desc" : "Faster delivery" }
+          ],
+          "map" : {
+            "out.weight" : "param.weight",
+            "out.country" : "param.country",
+            "out.express" : "param.express"
+          }
+        },
+        "request" : {
+          "name" : "3.2 Writing code"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Calculate the shipping cost",
+      "config" : {
+        "output" : {
+          "code" : [
+            "// a local variable: it exists only while this code runs",
+            "Number price = 8;",
+            "",
+            "// conditions",
+            "if (in.weight > 10) {",
+            "  price = 15;",
+            "}",
+            "if (in.express) {",
+            "  price = price * 2;",
+            "}",
+            "out.cost = price;",
+            "",
+            "// calling Java: a method of java.lang.String",
+            "out.country = in.country.toUpperCase();",
+            "",
+            "// writing to the Runtime Log",
+            "ivy.log.info(\"Shipping to \" + out.country + \" calculated\");"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 64 },
+        "description" : "Guide 3.2: the value comes from code, not from the mapping table."
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 416, "y" : 64 }
+      }
+    } ]
+}

@@ -1,0 +1,25 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "ScriptMappingData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.1: an order and its total.",
+  "fields" : [ {
+      "name" : "customer",
+      "comment" : "Who orders"
+    }, {
+      "name" : "quantity",
+      "type" : "Number",
+      "comment" : "How many pieces"
+    }, {
+      "name" : "unitPrice",
+      "type" : "Number",
+      "comment" : "Price of one piece"
+    }, {
+      "name" : "total",
+      "type" : "Number",
+      "comment" : "quantity times unitPrice"
+    }, {
+      "name" : "status",
+      "comment" : "Where the order stands"
+    } ]
+}

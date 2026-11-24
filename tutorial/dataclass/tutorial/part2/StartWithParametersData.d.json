@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "StartWithParametersData",
+  "namespace" : "tutorial.part2",
+  "comment" : "Guide 2.3: the data of a room booking.",
+  "fields" : [ {
+      "name" : "room",
+      "comment" : "The meeting room that is booked"
+    }, {
+      "name" : "people",
+      "type" : "Number",
+      "comment" : "How many people come"
+    } ]
+}

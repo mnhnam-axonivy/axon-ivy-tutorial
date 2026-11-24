@@ -1,0 +1,56 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E523",
+  "config" : {
+    "data" : "tutorial.part2.StartWithParametersData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Book a room",
+      "config" : {
+        "signature" : "bookRoom",
+        "input" : {
+          "params" : [
+            { "name" : "room", "type" : "String", "desc" : "Name of the meeting room" },
+            { "name" : "people", "type" : "Number", "desc" : "How many people come" }
+          ],
+          "map" : {
+            "out.room" : "param.room",
+            "out.people" : "param.people"
+          }
+        },
+        "request" : {
+          "name" : "2.3 Book a meeting room"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 },
+        "description" : "Guide 2.3: a start with two input parameters."
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Log the booking",
+      "config" : {
+        "output" : {
+          "code" : "ivy.log.info(\"Room \" + in.room + \" is booked\");"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 416, "y" : 64 }
+      }
+    } ]
+}

@@ -1,0 +1,135 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E53B",
+  "config" : {
+    "data" : "tutorial.part3.BookRoomData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Book a room",
+      "config" : {
+        "signature" : "book",
+        "input" : {
+          "params" : [
+            { "name" : "room", "type" : "String", "desc" : "Name of the room" },
+            { "name" : "people", "type" : "Number", "desc" : "How many people" }
+          ],
+          "map" : {
+            "out.room" : "param.room",
+            "out.people" : "param.people"
+          }
+        },
+        "request" : {
+          "name" : "3.10 Throwing and catching an error"
+        }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f2" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      }
+    }, {
+      "id" : "f2",
+      "type" : "SubProcessCall",
+      "name" : "Reserve the room",
+      "config" : {
+        "processCall" : "tutorial/part3/ReserveRoom:reserve(String,Number)",
+        "call" : {
+          "map" : {
+            "param.room" : "in.room",
+            "param.people" : "in.people"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.reservation" : "result.reservation"
+          }
+        }
+      },
+      "boundaries" : [ {
+          "id" : "f9",
+          "type" : "ErrorBoundaryEvent",
+          "name" : "booking",
+          "config" : {
+            "errorCode" : "booking",
+            "output" : {
+              "map" : {
+                "out" : "in",
+                "out.message" : "\"No room for \" + in.people + \" people: \" + error.getErrorCode()"
+              }
+            }
+          },
+          "connect" : [
+            { "id" : "f13", "to" : "f4", "via" : [ { "x" : 256, "y" : 256 } ] }
+          ],
+          "visual" : {
+            "at" : { "x" : 256, "y" : 190 },
+            "labelOffset" : { "x" : 34, "y" : 0 }
+          }
+        } ],
+      "connect" : [
+        { "id" : "f11", "to" : "f3" }
+      ],
+      "visual" : {
+        "at" : { "x" : 256, "y" : 160 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Confirm",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "out.message = \"Room \" + in.room + \" booked: \" + in.reservation;",
+            "ivy.log.info(out.message);"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f1" }
+      ],
+      "visual" : {
+        "at" : { "x" : 416, "y" : 160 }
+      }
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "name" : "Booked",
+      "visual" : {
+        "at" : { "x" : 560, "y" : 160 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "Script",
+      "name" : "Offer another room",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "ivy.log.warn(in.message);"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f5" }
+      ],
+      "visual" : {
+        "at" : { "x" : 416, "y" : 256 }
+      }
+    }, {
+      "id" : "f5",
+      "type" : "TaskEnd",
+      "name" : "Not booked",
+      "visual" : {
+        "at" : { "x" : 560, "y" : 256 }
+      }
+    } ]
+}

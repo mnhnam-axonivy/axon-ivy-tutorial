@@ -1,0 +1,21 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "MergeAndLoopData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.6: reminders for an invoice, until it is paid or handed over.",
+  "fields" : [ {
+      "name" : "invoice",
+      "comment" : "Number of the invoice"
+    }, {
+      "name" : "paidAfter",
+      "type" : "Number",
+      "comment" : "After which reminder the customer pays (0: never)"
+    }, {
+      "name" : "reminders",
+      "type" : "Number",
+      "comment" : "Reminders sent so far"
+    }, {
+      "name" : "result",
+      "comment" : "How it ended"
+    } ]
+}

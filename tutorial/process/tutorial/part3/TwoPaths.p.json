@@ -1,0 +1,105 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E534",
+  "config" : {
+    "data" : "tutorial.part3.TwoPathsData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Submit an expense",
+      "config" : {
+        "signature" : "submit",
+        "input" : {
+          "params" : [
+            { "name" : "employee", "type" : "String", "desc" : "Who spent the money" },
+            { "name" : "amount", "type" : "Number", "desc" : "Amount in CHF" },
+            { "name" : "urgent", "type" : "Boolean", "desc" : "Needed today" }
+          ],
+          "map" : {
+            "out.employee" : "param.employee",
+            "out.amount" : "param.amount",
+            "out.urgent" : "param.urgent"
+          }
+        },
+        "request" : {
+          "name" : "3.4 Two paths, one condition"
+        }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f2" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      }
+    }, {
+      "id" : "f2",
+      "type" : "Alternative",
+      "name" : "More than 500?",
+      "config" : {
+        "conditions" : {
+          "f21" : "in.amount > 500",
+          "f22" : ""
+        }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f3", "via" : [ { "x" : 224, "y" : 64 } ], "label" : { "name" : "yes" } },
+        { "id" : "f22", "to" : "f4", "via" : [ { "x" : 224, "y" : 256 } ], "label" : { "name" : "no" } }
+      ],
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 },
+        "labelOffset" : { "x" : 64, "y" : 0 },
+        "description" : "Guide 3.4: more than 500 CHF needs the manager; every other expense is paid at once."
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Ask the manager",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.status" : "\"waiting for the manager\""
+          }
+        }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f5" }
+      ],
+      "visual" : {
+        "at" : { "x" : 384, "y" : 64 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "Script",
+      "name" : "Pay it out",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.status" : "\"paid\""
+          }
+        }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f6" }
+      ],
+      "visual" : {
+        "at" : { "x" : 384, "y" : 256 }
+      }
+    }, {
+      "id" : "f5",
+      "type" : "TaskEnd",
+      "name" : "Sent for approval",
+      "visual" : {
+        "at" : { "x" : 544, "y" : 64 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "TaskEnd",
+      "name" : "Paid",
+      "visual" : {
+        "at" : { "x" : 544, "y" : 256 }
+      }
+    } ]
+}

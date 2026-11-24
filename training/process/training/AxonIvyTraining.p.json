@@ -1,0 +1,47 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F5B3D2C1E4F601",
+  "config" : {
+    "data" : "training.AxonIvyTrainingData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Axon Ivy Training",
+      "config" : {
+        "signature" : "axonIvyTraining",
+        "request" : {
+          "name" : "Axon Ivy Training",
+          "description" : "Skill trees for learning Axon Ivy 14, one short film and one question per skill."
+        }
+      },
+      "tags" : [
+        "DEMO"
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f3",
+      "type" : "DialogCall",
+      "name" : "Training",
+      "config" : {
+        "dialog" : "training.AxonIvyTraining:start()"
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 416, "y" : 64 }
+      }
+    } ]
+}

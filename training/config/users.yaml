@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0/config/users.json
+#
+# The training's cast as test users, to log in with in the Developer Workflow UI.
+# The password of each is the user name.
+Users:
+  - Name: anna
+    Password: anna
+    FullName: Anna Keller
+    Mail: anna@example.com
+    Roles:
+      - Employee
+  - Name: max
+    Password: max
+    FullName: Max Brunner
+    Mail: max@example.com
+    Roles:
+      - Manager
+  - Name: lea
+    Password: lea
+    FullName: Lea Moser
+    Mail: lea@example.com
+    Roles:
+      - Manager
+  - Name: hanna
+    Password: hanna
+    FullName: Hanna Frei
+    Mail: hanna@example.com
+    Roles:
+      - HR
+  - Name: ben
+    Password: ben
+    FullName: Ben Suter
+    Mail: ben@example.com
+    Roles:
+      - HR
+  - Name: chloe
+    Password: chloe
+    FullName: Chloé Roth
+    Mail: chloe@example.com
+    Roles:
+      - HR

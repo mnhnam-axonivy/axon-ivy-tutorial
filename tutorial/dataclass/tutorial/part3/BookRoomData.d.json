@@ -1,0 +1,20 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "BookRoomData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.10: a booking, and what the person is told.",
+  "fields" : [ {
+      "name" : "room",
+      "comment" : "Name of the room"
+    }, {
+      "name" : "people",
+      "type" : "Number",
+      "comment" : "How many people"
+    }, {
+      "name" : "reservation",
+      "comment" : "Number of the reservation"
+    }, {
+      "name" : "message",
+      "comment" : "What the person is told"
+    } ]
+}

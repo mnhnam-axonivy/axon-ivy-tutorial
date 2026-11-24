@@ -1,0 +1,18 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "ProcessElementsData",
+  "namespace" : "tutorial.part2",
+  "comment" : "Guide 2.1: the data of an order.",
+  "fields" : [
+    {
+      "name" : "amount",
+      "type" : "Number",
+      "comment" : "Amount of the order, without shipping"
+    },
+    {
+      "name" : "total",
+      "type" : "Number",
+      "comment" : "Amount with shipping"
+    }
+  ]
+}

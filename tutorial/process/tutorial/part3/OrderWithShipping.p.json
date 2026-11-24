@@ -1,0 +1,89 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E538",
+  "config" : {
+    "data" : "tutorial.part3.OrderWithShippingData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Order an item",
+      "config" : {
+        "signature" : "order",
+        "input" : {
+          "params" : [
+            { "name" : "item", "type" : "String", "desc" : "What was ordered" },
+            { "name" : "weight", "type" : "Number", "desc" : "Weight in kg" },
+            { "name" : "country", "type" : "String", "desc" : "Country code of the address" }
+          ],
+          "map" : {
+            "out.item" : "param.item",
+            "out.weight" : "param.weight",
+            "out.country" : "param.country"
+          }
+        },
+        "request" : {
+          "name" : "3.8 Calling a sub process"
+        }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f2" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      }
+    }, {
+      "id" : "f2",
+      "type" : "SubProcessCall",
+      "name" : "Shipping cost",
+      "config" : {
+        "processCall" : "tutorial/part3/ShippingCost:calculate(Number,String)",
+        "call" : {
+          "map" : {
+            "param.weight" : "in.weight",
+            "param.country" : "in.country"
+          }
+        },
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.shipping" : "result.cost"
+          }
+        }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f3" }
+      ],
+      "visual" : {
+        "at" : { "x" : 256, "y" : 64 },
+        "description" : "Guide 3.8: calls the callable sub process ShippingCost."
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Confirm",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "out.confirmation = in.item + \": shipping \" + in.shipping + \" CHF\";",
+            "ivy.log.info(out.confirmation);"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f1" }
+      ],
+      "visual" : {
+        "at" : { "x" : 416, "y" : 64 }
+      }
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 560, "y" : 64 }
+      }
+    } ]
+}

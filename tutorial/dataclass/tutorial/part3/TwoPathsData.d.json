@@ -1,0 +1,21 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "TwoPathsData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.4: an expense and what happens with it.",
+  "fields" : [ {
+      "name" : "employee",
+      "comment" : "Who spent the money"
+    }, {
+      "name" : "amount",
+      "type" : "Number",
+      "comment" : "Amount in CHF"
+    }, {
+      "name" : "urgent",
+      "type" : "Boolean",
+      "comment" : "Needed today"
+    }, {
+      "name" : "status",
+      "comment" : "What happens with the expense"
+    } ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "FoldedStepsData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.9: an order prepared in steps that are folded into boxes.",
+  "fields" : [ {
+      "name" : "item",
+      "comment" : "What was ordered"
+    }, {
+      "name" : "quantity",
+      "type" : "Number",
+      "comment" : "How many"
+    }, {
+      "name" : "inStock",
+      "type" : "Boolean",
+      "comment" : "Whether the warehouse has enough"
+    }, {
+      "name" : "total",
+      "type" : "Number",
+      "comment" : "Price of the order in CHF"
+    }, {
+      "name" : "packed",
+      "type" : "Boolean",
+      "comment" : "Whether the parcel is packed"
+    } ]
+}

@@ -1,0 +1,22 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "ScriptCodeData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.2: a parcel and what it costs to ship it.",
+  "fields" : [ {
+      "name" : "weight",
+      "type" : "Number",
+      "comment" : "Weight of the parcel in kg"
+    }, {
+      "name" : "country",
+      "comment" : "Country code of the address"
+    }, {
+      "name" : "express",
+      "type" : "Boolean",
+      "comment" : "Faster delivery, twice the price"
+    }, {
+      "name" : "cost",
+      "type" : "Number",
+      "comment" : "Shipping cost"
+    } ]
+}

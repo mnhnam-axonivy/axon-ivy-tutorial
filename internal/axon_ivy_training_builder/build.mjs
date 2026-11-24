@@ -1,0 +1,141 @@
+/**
+ * Builds the training page into the training project:
+ *
+ *   src/ + trees/   →   training/webContent/resources/js/axon-ivy-training.js (with its styles)
+ *
+ * One file holds everything a browser needs (the skill-tree player, the film player, the
+ * puzzle game with three.js, every tree with its films, puzzles and texts), so the page works
+ * without a network. three.js and the fonts (vendor/fonts) are part of that file, so their
+ * licences are kept at its top.
+ *
+ *   node build.mjs            build
+ *   node build.mjs --watch    rebuild on change
+ *   node build.mjs --check    fail if the committed file is not what the sources produce
+ */
+import { build, context, transform } from 'esbuild';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import { dirname, join, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = dirname(fileURLToPath(import.meta.url));
+const repo = resolve(root, '../..');
+const resources = join(repo, 'training/webContent/resources');
+const jsDir = join(resources, 'js');
+const outfile = join(jsDir, 'axon-ivy-training.js');
+const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+const args = new Set(process.argv.slice(2));
+
+// three.js (the puzzle game draws with it) ends up inside the file: its licence goes with it
+const three = JSON.parse(readFileSync(join(root, 'node_modules/three/package.json'), 'utf8'));
+const threeLicence = readFileSync(join(root, 'node_modules/three/LICENSE'), 'utf8')
+  .replace(/©/g, '(c)').trim().split(/\r?\n/).map(line => (' *   ' + line).trimEnd()).join('\n');
+
+// The page's font, Roboto (vendor/fonts, from tools/fetch-fonts.mjs), ends up inside the file too,
+// as data: URLs, so the page still needs no network. Its family gets a name of its own ("Ivy
+// Training Roboto"): the dialog's theme may declare a font by the same name.
+export const FONT_PREFIX = 'Ivy Training ';
+const fontsDir = join(root, 'vendor/fonts');
+const fontFaces = JSON.parse(readFileSync(join(fontsDir, 'fonts.json'), 'utf8'));
+const fontFiles = [...new Set(fontFaces.map(f => f.file))];
+const fontSlugs = [...new Set(fontFiles.map(file => file.replace(/(-\d+)?\.woff2$/, '')))];
+const ofl = slug => readFileSync(join(fontsDir, slug + '.OFL.txt'), 'utf8').replace(/\r/g, '').replace(/©/g, '(c)');
+const fontFamilies = [...new Set(fontFaces.map(f => f.family))];
+const fontLicence = [
+  ' * Includes the font' + (fontFamilies.length > 1 ? 's ' : ' ') + fontFamilies.join(', ') + ' (Latin subset' + (fontFamilies.length > 1 ? 's' : '') + '):',
+  ' *',
+  ...fontSlugs.map(slug => ' *   ' + ofl(slug).split('\n')[0].trim()),
+  ' *',
+  ' * licensed under the SIL Open Font License, Version 1.1:',
+  ' *',
+  // the licence's text is the same for each; its first line is the copyright, listed above
+  ...ofl(fontSlugs[0]).split('\n').slice(1).join('\n').trim().replace(/^This Font Software is licensed under the SIL Open Font License, Version 1\.1\.\n*/, '')
+    .split('\n').map(line => (' *   ' + line).trimEnd())
+].join('\n');
+
+/** `import fontFaces from 'fonts:css'`: the @font-face rules, one per font file (a variable font serves all its weights). */
+const embeddedFonts = {
+  name: 'embedded-fonts',
+  setup(b) {
+    b.onResolve({ filter: /^fonts:css$/ }, () => ({ path: 'fonts:css', namespace: 'fonts' }));
+    b.onLoad({ filter: /.*/, namespace: 'fonts' }, () => {
+      const rules = fontFiles.map(file => {
+        const faces = fontFaces.filter(f => f.file === file);
+        const weights = faces.flatMap(f => f.weight.split(/\s+/).map(Number));
+        const { family, style, unicodeRange } = faces[0];
+        const data = readFileSync(join(fontsDir, file)).toString('base64');
+        return `@font-face{font-family:"${FONT_PREFIX}${family}";font-style:${style};font-weight:${Math.min(...weights)} ${Math.max(...weights)};` +
+          `font-display:swap;src:url(data:font/woff2;base64,${data}) format("woff2");unicode-range:${unicodeRange}}`;
+      });
+      return { contents: rules.join(''), loader: 'text', watchFiles: [join(fontsDir, 'fonts.json'), ...fontFiles.map(f => join(fontsDir, f))] };
+    });
+  }
+};
+
+/** Stylesheets are imported as (minified) text and put into the shadow root. */
+const cssAsText = {
+  name: 'css-as-text',
+  setup(b) {
+    b.onLoad({ filter: /\.css$/ }, async file => {
+      const result = await transform(await readFile(file.path, 'utf8'), { loader: 'css', minify: true });
+      return { contents: result.code, loader: 'text' };
+    });
+  }
+};
+
+export const options = {
+  entryPoints: [join(root, 'src/index.js')],
+  outfile,
+  bundle: true,
+  format: 'iife',
+  target: ['es2020'],
+  minify: true,
+  charset: 'ascii', // no encoding surprises, however the file is served
+  legalComments: 'none',
+  logLevel: 'warning',
+  plugins: [cssAsText, embeddedFonts],
+  banner: {
+    js: '/*!\n * Axon Ivy Training ' + pkg.version + '\n * Generated by internal/axon_ivy_training_builder (npm run build) - do not edit.\n *\n' +
+      ' * Includes three.js ' + three.version + ' (https://threejs.org):\n *\n' + threeLicence + '\n *\n' + fontLicence + '\n */'
+  }
+};
+
+const ascii = text => text.replace(/[^\x00-\x7f]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
+// "#{" only ever comes from a text (in a string or a template): write its brace as an escape
+const noExpressions = text => text.replace(/#\{/g, '#\\u007b');
+
+function inspect(text) {
+  const problems = [];
+  // JSF evaluates #{...} in some resources; make sure the bundle can never contain it.
+  if (text.includes('#{')) problems.push('contains "#{", which JSF may treat as an expression');
+  if (/[^\x00-\x7f]/.test(text)) problems.push('contains non-ASCII characters');
+  if (problems.length) throw new Error(relative(repo, outfile) + ': ' + problems.join('; '));
+}
+
+export async function bundle() {
+  const result = await build({ ...options, write: false });
+  // esbuild escapes non-ASCII text everywhere except in regular expression literals
+  const text = noExpressions(ascii(result.outputFiles[0].text));
+  inspect(text);
+  return text;
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  if (args.has('--watch')) {
+    const ctx = await context({ ...options, logLevel: 'info' });
+    await ctx.watch();
+    console.log('Watching for changes. Output: ' + relative(repo, outfile));
+  } else if (args.has('--check')) {
+    const text = await bundle();
+    if (!existsSync(outfile) || readFileSync(outfile, 'utf8').replace(/\r\n/g, '\n') !== text) {
+      console.error('Out of date - run "npm run build": ' + relative(repo, outfile));
+      process.exit(1);
+    }
+    console.log('Up to date: ' + relative(resources, outfile));
+  } else {
+    const text = await bundle();
+    mkdirSync(jsDir, { recursive: true });
+    writeFileSync(outfile, text);
+    console.log('Built ' + relative(repo, outfile) + ' (' + (Buffer.byteLength(text) / 1024).toFixed(1) + ' kB)');
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E536",
+  "config" : {
+    "data" : "tutorial.part3.MergeAndLoopData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Remind a customer",
+      "config" : {
+        "signature" : "remind",
+        "input" : {
+          "params" : [
+            { "name" : "invoice", "type" : "String", "desc" : "Number of the invoice" },
+            { "name" : "paidAfter", "type" : "Number", "desc" : "After which reminder the customer pays (0: never)" }
+          ],
+          "map" : {
+            "out.invoice" : "param.invoice",
+            "out.paidAfter" : "param.paidAfter"
+          }
+        },
+        "request" : {
+          "name" : "3.6 Coming back together, and loops"
+        }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f3" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Send a reminder",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "in.reminders = in.reminders + 1;",
+            "ivy.log.info(\"Reminder \" + in.reminders + \" for invoice \" + in.invoice);"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f4" }
+      ],
+      "visual" : {
+        "at" : { "x" : 240, "y" : 160 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "Alternative",
+      "name" : "Paid?",
+      "config" : {
+        "conditions" : {
+          "f41" : "in.paidAfter > 0 && in.reminders >= in.paidAfter",
+          "f42" : "in.reminders >= 3",
+          "f43" : ""
+        }
+      },
+      "connect" : [
+        { "id" : "f41", "to" : "f5", "via" : [ { "x" : 400, "y" : 64 } ] },
+        { "id" : "f42", "to" : "f6" },
+        {
+          "id" : "f43",
+          "to" : "f3",
+          "via" : [
+            { "x" : 400, "y" : 256 },
+            { "x" : 240, "y" : 256 }
+          ],
+          "label" : { "name" : "again" }
+        }
+      ],
+      "visual" : {
+        "at" : { "x" : 400, "y" : 160 },
+        "labelOffset" : { "x" : -26, "y" : -26 },
+        "description" : "Guide 3.6: paid, or three reminders sent, or else one more reminder."
+      }
+    }, {
+      "id" : "f5",
+      "type" : "Script",
+      "name" : "Close the invoice",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.result" : "\"paid\""
+          }
+        }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f7", "via" : [ { "x" : 720, "y" : 64 } ] }
+      ],
+      "visual" : {
+        "at" : { "x" : 560, "y" : 64 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "Script",
+      "name" : "Hand over to collection",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.result" : "\"collection\""
+          }
+        }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f7" }
+      ],
+      "visual" : {
+        "at" : { "x" : 560, "y" : 160 }
+      }
+    }, {
+      "id" : "f7",
+      "type" : "Alternative",
+      "config" : {
+        "conditions" : {
+          "f14" : ""
+        }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f8" }
+      ],
+      "visual" : {
+        "at" : { "x" : 720, "y" : 160 },
+        "description" : "Guide 3.6: the two ways out of the loop come back together here."
+      }
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Archive",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "ivy.log.info(\"Invoice \" + in.invoice + \" archived: \" + in.result);"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f15", "to" : "f9" }
+      ],
+      "visual" : {
+        "at" : { "x" : 848, "y" : 160 }
+      }
+    }, {
+      "id" : "f9",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 976, "y" : 160 }
+      }
+    } ]
+}

@@ -1,0 +1,91 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E539",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "tutorial.part3.ShippingCostData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "calculate(Number,String)",
+      "config" : {
+        "signature" : "calculate",
+        "input" : {
+          "params" : [
+            { "name" : "weight", "type" : "Number", "desc" : "Weight of the parcel in kg" },
+            { "name" : "country", "type" : "String", "desc" : "Country code of the address" }
+          ],
+          "map" : {
+            "out.weight" : "param.weight",
+            "out.country" : "param.country"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "cost", "type" : "Number", "desc" : "Shipping cost in CHF" }
+          ],
+          "map" : {
+            "result.cost" : "in.cost"
+          }
+        }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f3" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Base price",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "in.cost = 8;",
+            "if (in.weight > 10) {",
+            "  in.cost = 15;",
+            "}"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f4" }
+      ],
+      "visual" : {
+        "at" : { "x" : 240, "y" : 64 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "Script",
+      "name" : "Abroad",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "if (in.country != \"CH\") {",
+            "  in.cost = in.cost + 12;",
+            "}"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f1" }
+      ],
+      "visual" : {
+        "at" : { "x" : 400, "y" : 64 }
+      }
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 544, "y" : 64 }
+      }
+    } ]
+}

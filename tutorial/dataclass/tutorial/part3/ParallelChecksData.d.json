@@ -1,0 +1,19 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "ParallelChecksData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.7: an applicant, checked on two paths at the same time.",
+  "fields" : [ {
+      "name" : "name",
+      "comment" : "Name of the applicant"
+    }, {
+      "name" : "credit",
+      "comment" : "Result of the credit check"
+    }, {
+      "name" : "references",
+      "comment" : "Result of the reference check"
+    }, {
+      "name" : "decision",
+      "comment" : "Accepted or rejected"
+    } ]
+}

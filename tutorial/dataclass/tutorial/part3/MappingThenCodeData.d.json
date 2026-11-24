@@ -1,0 +1,24 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "MappingThenCodeData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.3: a discount set by the mapping and changed by the code.",
+  "fields" : [ {
+      "name" : "customer",
+      "comment" : "Who orders"
+    }, {
+      "name" : "total",
+      "type" : "Number",
+      "comment" : "Value of the order"
+    }, {
+      "name" : "message",
+      "comment" : "Text for the customer"
+    }, {
+      "name" : "discount",
+      "type" : "Number",
+      "comment" : "Discount in percent"
+    }, {
+      "name" : "level",
+      "comment" : "standard or gold"
+    } ]
+}

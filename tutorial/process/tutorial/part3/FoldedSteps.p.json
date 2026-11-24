@@ -1,0 +1,220 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E53A",
+  "config" : {
+    "data" : "tutorial.part3.FoldedStepsData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Prepare an order",
+      "config" : {
+        "signature" : "prepare",
+        "input" : {
+          "params" : [
+            { "name" : "item", "type" : "String", "desc" : "What was ordered" },
+            { "name" : "quantity", "type" : "Number", "desc" : "How many" }
+          ],
+          "map" : {
+            "out.item" : "param.item",
+            "out.quantity" : "param.quantity"
+          }
+        },
+        "request" : {
+          "name" : "3.9 Folding part of a process into a box"
+        }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "S1" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      }
+    }, {
+      "id" : "S1",
+      "type" : "EmbeddedProcess",
+      "name" : "Check the order",
+      "elements" : [ {
+          "id" : "S1-g0",
+          "type" : "EmbeddedStart",
+          "name" : "in 1",
+          "parentConnector" : "f10",
+          "connect" : [
+            { "id" : "S1-f0", "to" : "S1-f1" }
+          ],
+          "visual" : {
+            "at" : { "x" : 64, "y" : 160 },
+            "labelOffset" : { "x" : 0, "y" : 30 }
+          }
+        }, {
+          "id" : "S1-f1",
+          "type" : "Script",
+          "name" : "Check the stock",
+          "config" : {
+            "output" : {
+              "map" : {
+                "out" : "in"
+              },
+              "code" : [
+                "in.inStock = in.quantity <= 20;",
+                "ivy.log.info(\"Stock for \" + in.quantity + \" \" + in.item + \": \" + in.inStock);"
+              ]
+            }
+          },
+          "connect" : [
+            { "id" : "S1-f1c", "to" : "S1-f2" }
+          ],
+          "visual" : {
+            "at" : { "x" : 224, "y" : 160 }
+          }
+        }, {
+          "id" : "S1-f2",
+          "type" : "Script",
+          "name" : "Reserve",
+          "config" : {
+            "output" : {
+              "map" : {
+                "out" : "in"
+              },
+              "code" : [
+                "ivy.log.info(\"Reserved \" + in.quantity + \" \" + in.item);"
+              ]
+            }
+          },
+          "connect" : [
+            { "id" : "S1-f2c", "to" : "S1-g1" }
+          ],
+          "visual" : {
+            "at" : { "x" : 384, "y" : 160 }
+          }
+        }, {
+          "id" : "S1-g1",
+          "type" : "EmbeddedEnd",
+          "name" : "out 1",
+          "parentConnector" : "f11",
+          "visual" : {
+            "at" : { "x" : 544, "y" : 160 },
+            "labelOffset" : { "x" : 0, "y" : 30 }
+          }
+        } ],
+      "connect" : [
+        { "id" : "f11", "to" : "S2" }
+      ],
+      "visual" : {
+        "at" : { "x" : 256, "y" : 160 },
+        "size" : { "width" : 128 }
+      }
+    }, {
+      "id" : "S2",
+      "type" : "ScriptBpmnElement",
+      "name" : "Calculate the total",
+      "elements" : [ {
+          "id" : "S2-g0",
+          "type" : "EmbeddedStart",
+          "name" : "in 1",
+          "parentConnector" : "f11",
+          "connect" : [
+            { "id" : "S2-f0", "to" : "S2-f1" }
+          ],
+          "visual" : {
+            "at" : { "x" : 64, "y" : 160 },
+            "labelOffset" : { "x" : 0, "y" : 30 }
+          }
+        }, {
+          "id" : "S2-f1",
+          "type" : "Script",
+          "name" : "Price times quantity",
+          "config" : {
+            "output" : {
+              "map" : {
+                "out" : "in"
+              },
+              "code" : [
+                "in.total = in.quantity * 12.5;"
+              ]
+            }
+          },
+          "connect" : [
+            { "id" : "S2-f1c", "to" : "S2-g1" }
+          ],
+          "visual" : {
+            "at" : { "x" : 224, "y" : 160 }
+          }
+        }, {
+          "id" : "S2-g1",
+          "type" : "EmbeddedEnd",
+          "name" : "out 1",
+          "parentConnector" : "f12",
+          "visual" : {
+            "at" : { "x" : 384, "y" : 160 },
+            "labelOffset" : { "x" : 0, "y" : 30 }
+          }
+        } ],
+      "connect" : [
+        { "id" : "f12", "to" : "S3" }
+      ],
+      "visual" : {
+        "at" : { "x" : 416, "y" : 160 },
+        "size" : { "width" : 128 }
+      }
+    }, {
+      "id" : "S3",
+      "type" : "ManualBpmnElement",
+      "name" : "Pack the parcel",
+      "elements" : [ {
+          "id" : "S3-g0",
+          "type" : "EmbeddedStart",
+          "name" : "in 1",
+          "parentConnector" : "f12",
+          "connect" : [
+            { "id" : "S3-f0", "to" : "S3-f1" }
+          ],
+          "visual" : {
+            "at" : { "x" : 64, "y" : 160 },
+            "labelOffset" : { "x" : 0, "y" : 30 }
+          }
+        }, {
+          "id" : "S3-f1",
+          "type" : "Script",
+          "name" : "Mark as packed",
+          "config" : {
+            "output" : {
+              "map" : {
+                "out" : "in"
+              },
+              "code" : [
+                "in.packed = true;"
+              ]
+            }
+          },
+          "connect" : [
+            { "id" : "S3-f1c", "to" : "S3-g1" }
+          ],
+          "visual" : {
+            "at" : { "x" : 224, "y" : 160 }
+          }
+        }, {
+          "id" : "S3-g1",
+          "type" : "EmbeddedEnd",
+          "name" : "out 1",
+          "parentConnector" : "f13",
+          "visual" : {
+            "at" : { "x" : 384, "y" : 160 },
+            "labelOffset" : { "x" : 0, "y" : 30 }
+          }
+        } ],
+      "connect" : [
+        { "id" : "f13", "to" : "f1" }
+      ],
+      "visual" : {
+        "at" : { "x" : 576, "y" : 160 },
+        "size" : { "width" : 128 }
+      }
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 720, "y" : 160 }
+      }
+    } ]
+}

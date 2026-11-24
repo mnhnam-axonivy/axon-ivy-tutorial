@@ -1,0 +1,90 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E525",
+  "config" : {
+    "data" : "tutorial.part2.StartListData"
+  },
+  "elements" : [
+    {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Book a parking space",
+      "config" : {
+        "signature" : "bookParking",
+        "input" : {
+          "params" : [
+            {
+              "name" : "day",
+              "type" : "String",
+              "desc" : "The day the space is needed"
+            }
+          ],
+          "map" : {
+            "out.day" : "param.day"
+          }
+        },
+        "request" : {
+          "name" : "2.5 Book a parking space",
+          "description" : "Reserve a parking space at the office for one day.",
+          "category" : "Facilities"
+        },
+        "permission" : {
+          "anonymous" : false
+        }
+      },
+      "visual" : {
+        "at" : {
+          "x" : 96,
+          "y" : 64
+        }
+      },
+      "connect" : [
+        {
+          "id" : "f2",
+          "to" : "f3"
+        }
+      ]
+    },
+    {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Reserve a space",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.space" : "\"P12\""
+          },
+          "code" : "ivy.log.info(\"Space \" + out.space + \" reserved for \" + in.day);"
+        }
+      },
+      "visual" : {
+        "at" : {
+          "x" : 256,
+          "y" : 64
+        }
+      },
+      "connect" : [
+        {
+          "id" : "f4",
+          "to" : "f1"
+        }
+      ]
+    },
+    {
+      "id" : "f1",
+      "type" : "TaskEndPage",
+      "name" : "Show the confirmation",
+      "config" : {
+        "page" : "view/tutorial/part2/parking-booked.html"
+      },
+      "visual" : {
+        "at" : {
+          "x" : 416,
+          "y" : 64
+        }
+      }
+    }
+  ],
+  "description" : "Guide 2.5: a start on the start list, for registered users only, that ends with a page."
+}

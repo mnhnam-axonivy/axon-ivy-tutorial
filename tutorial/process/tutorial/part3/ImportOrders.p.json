@@ -1,0 +1,159 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E53D",
+  "config" : {
+    "data" : "tutorial.part3.ImportOrdersData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Import orders",
+      "config" : {
+        "signature" : "importOrders",
+        "input" : {
+          "params" : [
+            { "name" : "lines", "type" : "Number", "desc" : "How many lines the file has" }
+          ],
+          "map" : {
+            "out.lines" : "param.lines"
+          }
+        },
+        "request" : {
+          "name" : "3.11 One handler for the whole process"
+        }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f2" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      }
+    }, {
+      "id" : "f2",
+      "type" : "Script",
+      "name" : "Read the file",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "import ch.ivyteam.ivy.bpm.error.BpmError;",
+            "",
+            "if (in.lines == 0) {",
+            "  BpmError.create(\"import:empty\").throwError();",
+            "}",
+            "ivy.log.info(\"Read \" + in.lines + \" lines\");"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f3" }
+      ],
+      "visual" : {
+        "at" : { "x" : 240, "y" : 64 }
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Import",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "in.imported = in.lines;",
+            "ivy.log.info(\"Imported \" + in.imported + \" orders\");"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f1" }
+      ],
+      "visual" : {
+        "at" : { "x" : 400, "y" : 64 }
+      }
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "name" : "Imported",
+      "visual" : {
+        "at" : { "x" : 544, "y" : 64 }
+      }
+    }, {
+      "id" : "f7",
+      "type" : "ErrorStartEvent",
+      "name" : "import",
+      "config" : {
+        "errorCode" : "import",
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.problem" : "error.getErrorCode()"
+          }
+        }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f8" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 208 },
+        "description" : "Guide 3.11: catches every error whose code starts with import, from anywhere in this process."
+      }
+    }, {
+      "id" : "f8",
+      "type" : "Script",
+      "name" : "Report the problem",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "ivy.log.warn(\"Import stopped: \" + in.problem);"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f14", "to" : "f9" }
+      ],
+      "visual" : {
+        "at" : { "x" : 240, "y" : 208 }
+      }
+    }, {
+      "id" : "f9",
+      "type" : "TaskEnd",
+      "name" : "Reported",
+      "visual" : {
+        "at" : { "x" : 400, "y" : 208 }
+      }
+    }, {
+      "id" : "f20",
+      "type" : "RequestStart",
+      "name" : "Cancel an import",
+      "config" : {
+        "signature" : "cancel",
+        "request" : {
+          "name" : "3.11 Cancel an import"
+        }
+      },
+      "connect" : [
+        { "id" : "f15", "to" : "f21" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 320 }
+      }
+    }, {
+      "id" : "f21",
+      "type" : "ErrorEnd",
+      "name" : "import:cancelled",
+      "config" : {
+        "throws" : { "error" : "import:cancelled" }
+      },
+      "visual" : {
+        "at" : { "x" : 240, "y" : 320 },
+        "description" : "Guide 3.11: an Error End on the same level as the Error Start."
+      }
+    } ]
+}

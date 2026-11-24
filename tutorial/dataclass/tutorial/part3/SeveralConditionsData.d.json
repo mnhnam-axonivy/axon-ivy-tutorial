@@ -1,0 +1,14 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "SeveralConditionsData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.5: a shipment and the carrier that takes it.",
+  "fields" : [ {
+      "name" : "weight",
+      "type" : "Number",
+      "comment" : "Weight of the shipment in kg"
+    }, {
+      "name" : "carrier",
+      "comment" : "Who takes it"
+    } ]
+}

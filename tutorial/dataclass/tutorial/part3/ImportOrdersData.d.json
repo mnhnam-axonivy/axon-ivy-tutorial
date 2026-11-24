@@ -1,0 +1,18 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "ImportOrdersData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.11: an import of orders, and what went wrong.",
+  "fields" : [ {
+      "name" : "lines",
+      "type" : "Number",
+      "comment" : "How many lines the file has"
+    }, {
+      "name" : "imported",
+      "type" : "Number",
+      "comment" : "How many orders were imported"
+    }, {
+      "name" : "problem",
+      "comment" : "The code of the error, if the import stopped"
+    } ]
+}

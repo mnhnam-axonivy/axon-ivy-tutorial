@@ -1,0 +1,109 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E522",
+  "config" : {
+    "data" : "tutorial.part2.DataClassesData"
+  },
+  "elements" : [
+    {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Ask for holidays",
+      "config" : {
+        "signature" : "askForHolidays",
+        "input" : {
+          "params" : [
+            {
+              "name" : "employeeId",
+              "type" : "String",
+              "desc" : "Personnel number, such as 00731"
+            },
+            {
+              "name" : "days",
+              "type" : "Number",
+              "desc" : "How many days"
+            }
+          ],
+          "map" : {
+            "out.employeeId" : "param.employeeId",
+            "out.days" : "param.days"
+          }
+        },
+        "request" : {
+          "name" : "2.2 Ask for holidays"
+        }
+      },
+      "visual" : {
+        "at" : {
+          "x" : 96,
+          "y" : 64
+        }
+      },
+      "connect" : [
+        {
+          "id" : "f2",
+          "to" : "f3"
+        }
+      ]
+    },
+    {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Check the days",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.approved" : "in.days <= 10"
+          }
+        }
+      },
+      "visual" : {
+        "at" : {
+          "x" : 256,
+          "y" : 64
+        },
+        "description" : "Up to 10 days are approved."
+      },
+      "connect" : [
+        {
+          "id" : "f4",
+          "to" : "f5"
+        }
+      ]
+    },
+    {
+      "id" : "f5",
+      "type" : "Script",
+      "name" : "Log the answer",
+      "config" : {
+        "output" : {
+          "code" : "ivy.log.info(\"Holidays of \" + in.employeeId + \" approved: \" + in.approved);"
+        }
+      },
+      "visual" : {
+        "at" : {
+          "x" : 416,
+          "y" : 64
+        }
+      },
+      "connect" : [
+        {
+          "id" : "f6",
+          "to" : "f1"
+        }
+      ]
+    },
+    {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : {
+          "x" : 576,
+          "y" : 64
+        }
+      }
+    }
+  ],
+  "description" : "Guide 2.2: a holiday request and the data it carries."
+}

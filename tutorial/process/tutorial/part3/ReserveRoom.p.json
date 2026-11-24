@@ -1,0 +1,96 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E53C",
+  "kind" : "CALLABLE_SUB",
+  "config" : {
+    "data" : "tutorial.part3.ReserveRoomData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "CallSubStart",
+      "name" : "reserve(String,Number)",
+      "config" : {
+        "signature" : "reserve",
+        "input" : {
+          "params" : [
+            { "name" : "room", "type" : "String", "desc" : "Name of the room" },
+            { "name" : "people", "type" : "Number", "desc" : "How many people" }
+          ],
+          "map" : {
+            "out.room" : "param.room",
+            "out.people" : "param.people"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "reservation", "type" : "String", "desc" : "Number of the reservation" }
+          ],
+          "map" : {
+            "result.reservation" : "in.reservation"
+          }
+        }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f2" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      }
+    }, {
+      "id" : "f2",
+      "type" : "Alternative",
+      "name" : "Room big enough?",
+      "config" : {
+        "conditions" : {
+          "f21" : "in.people <= 8",
+          "f22" : ""
+        }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f3", "label" : { "name" : "yes" } },
+        { "id" : "f22", "to" : "f4", "via" : [ { "x" : 240, "y" : 256 } ], "label" : { "name" : "no" } }
+      ],
+      "visual" : {
+        "at" : { "x" : 240, "y" : 160 },
+        "labelOffset" : { "x" : 0, "y" : -30 },
+        "description" : "Guide 3.10: a room has 8 seats."
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Reserve",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "in.reservation = \"R-\" + in.room + \"-\" + in.people;"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f1" }
+      ],
+      "visual" : {
+        "at" : { "x" : 400, "y" : 160 }
+      }
+    }, {
+      "id" : "f1",
+      "type" : "CallSubEnd",
+      "visual" : {
+        "at" : { "x" : 544, "y" : 160 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "ErrorEnd",
+      "name" : "booking:full",
+      "config" : {
+        "throws" : { "error" : "booking:full" }
+      },
+      "visual" : {
+        "at" : { "x" : 400, "y" : 256 },
+        "description" : "Guide 3.10: throws the error booking:full to the process that called."
+      }
+    } ]
+}

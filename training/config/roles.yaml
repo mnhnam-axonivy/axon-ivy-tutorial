@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/14.0/config/roles.json
+#
+# The roles of the training's cast. Manager and HR are child roles of Employee:
+# whoever has one of them is an Employee too.
+Roles:
+  - Id: Employee
+    Name: Employee
+  - Id: Manager
+    Name: Manager
+    Parent: Employee
+  - Id: HR
+    Name: HR
+    Parent: Employee

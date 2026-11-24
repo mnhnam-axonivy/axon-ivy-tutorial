@@ -1,0 +1,675 @@
+{
+ "source": "axonivy.vscode-designer-14 140.1.2026102312 (process editor)",
+ "en": {
+  "part": {
+   "cache": {
+    "entry": "Entry",
+    "entryDesc": "Give the entry a name that represents the result data set (query).",
+    "group": "Group",
+    "groupDesc": "Give the group a name that represents the entity of the result data.",
+    "lifetime": "Lifetime",
+    "lifetimeMode": {
+     "duration": "Duration",
+     "fixed": "Fixed time",
+     "forever": "Forever"
+    },
+    "mode": {
+     "cache": "Cache",
+     "cacheDesc": "Use if you call an operation that only reads data.",
+     "invalidate": "Invalidate Cache",
+     "invalidateMode": "Use if you call an operation that modifies data",
+     "noCache": "Do not cache",
+     "noCacheMode": "Does not use caching at all.",
+     "title": "Mode"
+    },
+    "scope": "Scope",
+    "scopeMode": {
+     "application": "Application",
+     "applicationDesc": "Use this option to cache global data.",
+     "session": "Session",
+     "sessionDesc": "Use this option to cache user specific data."
+    },
+    "title": "Cache"
+   },
+   "call": {
+    "dialog": {
+     "create": "Create new Html Dialog",
+     "title": "Dialog"
+    },
+    "processStart": "Process start",
+    "sub": {
+     "create": "Create new Sub Process"
+    },
+    "title": "Process",
+    "trigger": {
+     "create": "Create new Trigger Process"
+    }
+   },
+   "case": {
+    "title": "Case"
+   },
+   "category": {
+    "empty": "<< Empty >>",
+    "emptyDesc": "Select no Category"
+   },
+   "condition": {
+    "title": "Condition"
+   },
+   "db": {
+    "clientCreate": "Create new Database Client",
+    "clientOpen": "Open Database Client",
+    "definition": "Definition",
+    "direction": "Direction",
+    "fields": "Fields",
+    "limit": "Limit",
+    "lotSize": "Lot size",
+    "queryKind": "Query Kind",
+    "quoteIvyScript": "Quote ivyScript variables",
+    "read": "Read",
+    "selectAllFields": "Select all fields",
+    "sort": "Sort",
+    "sqlQuery": "SQL Query",
+    "startIndex": "Start index",
+    "table": "Table",
+    "title": "Query"
+   },
+   "endPage": {
+    "title": "End Page"
+   },
+   "error": {
+    "cause": "Error Cause",
+    "code": "Error Code",
+    "codeToThrow": "Error Code to throw",
+    "empty": "<< Empty >>",
+    "emptyDesc": "Catches all errors",
+    "title": "Error"
+   },
+   "general": {
+    "displayName": "Display name",
+    "meansAndDocuments": "Means / Documents",
+    "nameAndDescription": "Name / Description",
+    "tags": "Tags",
+    "title": "General"
+   },
+   "mail": {
+    "attachments": {
+     "error": "Throw an error if any attachment is missing",
+     "title": "Attachments"
+    },
+    "content": {
+     "message": "Message",
+     "title": "Content",
+     "type": "Type"
+    },
+    "header": {
+     "bcc": "BCC",
+     "cc": "CC",
+     "from": "From",
+     "replyTo": "Reply to",
+     "subject": "Subject",
+     "title": "Header",
+     "to": "To"
+    }
+   },
+   "output": {
+    "disablePermission": "Disable Permission Checks (Execute this Script Step as SYSTEM)",
+    "title": "Output"
+   },
+   "permission": {
+    "allowProcessViewer": "Allow all workflow users to view the process on the Engine",
+    "title": "Permissions"
+   },
+   "processData": {
+    "dataClass": "Data Class",
+    "dataClassMessage": "If the process data class changes, all already used fields must exist in the new data class. Otherwise existing mappings and scripts will be removed.",
+    "title": "Process Data"
+   },
+   "program": {
+    "configuration": {
+     "title": "Configuration"
+    },
+    "error": {
+     "seconds": "Seconds",
+     "timout": "Timeout",
+     "title": "Error"
+    },
+    "event": {
+     "id": "Event ID",
+     "title": "Event",
+     "type": {
+      "continueWithoutEvent": "Continue without waiting",
+      "destroyTask": "Delete the Task",
+      "nothing": "Do nothing"
+     }
+    },
+    "javaClass": "Java Class",
+    "javaClassCreate": "Create new Java Class",
+    "javaClassOpen": "Open Java Class config",
+    "start": {
+     "title": "Java Bean"
+    }
+   },
+   "request": {
+    "showOnStartList": "Show on start list",
+    "startPerHttp": "Yes, this can be started with a HTTP-Request / -Link",
+    "title": "Request"
+   },
+   "rest": {
+    "accept": "Accept",
+    "acceptProperties": "Accept-Properties",
+    "body": "Body",
+    "client": "Client",
+    "contentType": "Content-Type",
+    "entityType": "Entity-Type",
+    "headers": "Headers",
+    "jaxRs": "JAX-RS",
+    "kind": "Kind",
+    "onError": "On Error (Connection, Timeout, etc.)",
+    "onNotSuccess": "On Status Code not successful (2xx)",
+    "openApi": "OpenAPI",
+    "parameters": "Parameters",
+    "properties": "Properties",
+    "readBodyType": "Read body as type (result variable)",
+    "resource": "Resource",
+    "restConfigCreate": "Create new Rest Client",
+    "restConfigOpen": "Open Rest config",
+    "resultType": "Result Type",
+    "service": "Rest Service"
+   },
+   "result": {
+    "paramter": "Result parameters",
+    "title": "Result"
+   },
+   "signal": {
+    "attachBusinessCase": "Attach to Business Case that signaled this process",
+    "code": "Signal Code",
+    "empty": "<< Empty >>",
+    "emptyDesc": "Receives every signal",
+    "title": "Signal"
+   },
+   "start": {
+    "inputParamters": "Input parameters",
+    "signature": "Signature",
+    "title": "Start"
+   },
+   "task": {
+    "delay": "Delay",
+    "noTaskMessage": "There is no (Task) output flow connected.",
+    "notification": "Notification",
+    "options": "Options",
+    "persist": "Persist task on creation",
+    "persistDisabled": "Persist task on creation (Only works if anonymous users are not allowed)",
+    "priority": "Priority",
+    "skipTasklist": "Skip Tasklist",
+    "suppress": "Suppress",
+    "task": "Task",
+    "tasks": "Tasks",
+    "template": "Template"
+   },
+   "trigger": {
+    "attachBusinessCase": "Attach to Business Case that triggered this process",
+    "startTriggerable": "Yes, this can be started with a Trigger Activity",
+    "title": "Trigger"
+   },
+   "ws": {
+    "authMessage": "Web service authentication on the <a>process</a>",
+    "client": "Client",
+    "clientCreate": "Create new WebService Client",
+    "clientOpen": "Open WebService config",
+    "exception": "Exception",
+    "exceptionHandling": "Use exception handling",
+    "operation": "Operation",
+    "port": "Port",
+    "properties": "Properties",
+    "request": "Request",
+    "title": "Web Service"
+   },
+   "wsprocess": {
+    "auth": {
+     "httpBasic": "HTTP Basic",
+     "none": "None/Container",
+     "wsSecurity": "WS Security"
+    },
+    "authentication": "Authentication",
+    "qualifiedName": "Qualified name",
+    "title": "Web Service Process"
+   }
+  },
+  "label": {
+   "action": "Action",
+   "allowAnonymous": "Allow anonymous",
+   "code": "Code",
+   "colorEdit": "Edit Color",
+   "colorNew": "New Color",
+   "column": "Column",
+   "condition": "Condition",
+   "customFields": "Custom Fields",
+   "database": "Database",
+   "duration": "Duration",
+   "editorLoading": "Loading Editor...",
+   "editorPlaceholder": "Press CTRL + SPACE for auto-completion",
+   "empty": "No results found.",
+   "enterDesc": "Enter a description",
+   "enterExpression": "Enter an expression",
+   "enterName": "Enter a name",
+   "enterUrl": "Enter a URL",
+   "error": "Error",
+   "expiry": "Expiry",
+   "expression": "Expression",
+   "mapped": "Mapped",
+   "message": "Message",
+   "openCMS": "Open CMS Editor",
+   "openCustomField": "Open custom field configuration",
+   "openFile": "Open file",
+   "openUrl": "Open URL",
+   "output": "Output",
+   "permission": "Permission",
+   "process": "Process",
+   "removeRow": "Remove row",
+   "request": "Request",
+   "reset": "Reset {{name}}",
+   "responsible": "Responsible",
+   "timeout": "Timeout",
+   "URL": "URL",
+   "validationError": "Violation error",
+   "warning": "Warning"
+  },
+  "common": {
+   "hotkey": {
+    "help": "Open Help ({{hotkey}})",
+    "redo": "Redo ({{hotkey}})",
+    "undo": "Undo ({{hotkey}})"
+   },
+   "label": {
+    "apply": "Apply",
+    "attribute": "Attribute",
+    "browser": "Browser",
+    "cancel": "Cancel",
+    "category": "Category",
+    "close": "Close",
+    "color": "Color",
+    "delete": "Delete",
+    "description": "Description",
+    "mapping": "Mapping",
+    "name": "Name",
+    "pin": "Pin",
+    "refresh": "Refresh",
+    "roles": "Roles",
+    "save": "Save",
+    "search": "Search",
+    "settings": "Settings",
+    "theme": "Theme",
+    "type": "Type",
+    "value": "Value"
+   }
+  },
+  "priority": {
+   "exception": "Exception",
+   "high": "High",
+   "low": "Low",
+   "normal": "Normal",
+   "script": "Script"
+  },
+  "responsible": {
+   "delete": "Nobody & delete",
+   "memberFromAttr": "Members from Attribute",
+   "roleFromAttr": "Role from Attribute",
+   "roles": "Roles",
+   "userFromAttr": "User from Attribute"
+  },
+  "title": {
+   "inscription": "Inscription"
+  },
+  "toolbar": {
+   "activities": "Activities",
+   "allElements": "All Elements",
+   "artifacts": "Artifacts",
+   "customIcon": "Custom Icon",
+   "details": "Inscription",
+   "events": "Events",
+   "extensions": "Extensions",
+   "gateways": "Gateways",
+   "grid": "Grid",
+   "marquee": "Marquee Tool ({{hotkey}})",
+   "openDataClass": "Open Data Class ({{hotkey}})",
+   "openFormEditor": "Open Form Editor ({{hotkey}})",
+   "selection": "Selection Tool"
+  }
+ },
+ "ja": {
+  "part": {
+   "cache": {
+    "entry": "エントリ",
+    "entryDesc": "結果データセット（クエリ）を表す名前をエントリに付けてください。",
+    "group": "グループ",
+    "groupDesc": "結果データのエンティティを表す名前をグループに付けてください。",
+    "lifetime": "ライフタイム",
+    "lifetimeMode": {
+     "duration": "期間",
+     "fixed": "一定時間",
+     "forever": "永久"
+    },
+    "mode": {
+     "cache": "キャッシュ",
+     "cacheDesc": "データの読み取りのみを実行する処理を呼び出す場合に使用します。",
+     "invalidate": "キャッシュを無効化",
+     "invalidateMode": "データを変更する処理を呼び出す場合に使用します",
+     "noCache": "キャッシュしない",
+     "noCacheMode": "キャッシュはまったく使用しません。",
+     "title": "モード"
+    },
+    "scope": "スコープ",
+    "scopeMode": {
+     "application": "アプリケーション",
+     "applicationDesc": "このオプションを使用して、グローバルデータをキャッシュします。",
+     "session": "セッション",
+     "sessionDesc": "このオプションを使用して、ユーザー固有のデータをキャッシュします。"
+    },
+    "title": "キャッシュ"
+   },
+   "call": {
+    "dialog": {
+     "create": "新しい HTML ダイアログを作成する",
+     "title": "ダイアログ"
+    },
+    "processStart": "プロセス開始",
+    "sub": {
+     "create": "新しいサブプロセスを作成"
+    },
+    "title": "プロセス",
+    "trigger": {
+     "create": "新しいトリガープロセスを作成"
+    }
+   },
+   "case": {
+    "title": "ケース"
+   },
+   "category": {
+    "empty": "<< 空白 >>",
+    "emptyDesc": "カテゴリーなしを選択"
+   },
+   "condition": {
+    "title": "条件"
+   },
+   "db": {
+    "definition": "定義",
+    "direction": "指示",
+    "fields": "フィールド",
+    "limit": "制限",
+    "lotSize": "ロットサイズ",
+    "queryKind": "クエリの種類",
+    "quoteIvyScript": "ivyScript 変数を引用する",
+    "read": "読み取る",
+    "selectAllFields": "すべてのフィールドを選択する",
+    "sort": "並び替え",
+    "sqlQuery": "SQL クエリ",
+    "startIndex": "開始インデックス",
+    "table": "表",
+    "title": "クエリ",
+    "clientCreate": "新しいデータベースクライアントを作成する",
+    "clientOpen": "データベース クライアント"
+   },
+   "endPage": {
+    "title": "終了ページ"
+   },
+   "error": {
+    "cause": "エラー原因",
+    "code": "エラーコード",
+    "codeToThrow": "スローするエラーコード",
+    "empty": "<< 空白 >>",
+    "emptyDesc": "すべてのエラーをキャッチします",
+    "title": "エラー"
+   },
+   "general": {
+    "displayName": "表示名",
+    "meansAndDocuments": "手段／ドキュメント",
+    "nameAndDescription": "名前／説明",
+    "tags": "タグ",
+    "title": "一般"
+   },
+   "mail": {
+    "attachments": {
+     "error": "添付ファイルがない場合にエラーをスローする",
+     "title": "添付ファイル"
+    },
+    "content": {
+     "message": "メッセージ",
+     "title": "コンテンツ",
+     "type": "タイプ"
+    },
+    "header": {
+     "bcc": "BCC",
+     "cc": "CC",
+     "from": "差出人",
+     "replyTo": "返信先",
+     "subject": "件名",
+     "title": "ヘッダー",
+     "to": "宛先"
+    }
+   },
+   "output": {
+    "disablePermission": "権限チェックを無効化（このスクリプトステップをシステムとして実行）",
+    "title": "出力"
+   },
+   "permission": {
+    "allowProcessViewer": "すべてのワークフローユーザーがエンジンでプロセスを表示できるようにする",
+    "title": "権限"
+   },
+   "processData": {
+    "dataClass": "データクラス",
+    "dataClassMessage": "プロセスデータクラスが変更された場合、すでに使用しているフィールドはすべて新しいデータクラスに存在しなければなりません。 存在しない場合、既存のマッピングとスクリプトは削除されます。",
+    "title": "プロセスデータ"
+   },
+   "program": {
+    "configuration": {
+     "title": "構成"
+    },
+    "error": {
+     "seconds": "秒",
+     "timout": "タイムアウト",
+     "title": "エラー"
+    },
+    "event": {
+     "id": "イベント ID",
+     "title": "イベント",
+     "type": {
+      "continueWithoutEvent": "待たずに続ける",
+      "destroyTask": "タスクを削除",
+      "nothing": "何もしない"
+     }
+    },
+    "javaClass": "Java クラス",
+    "javaClassCreate": "Java クラスを新規作成",
+    "javaClassOpen": "Java クラス構成を開く",
+    "start": {
+     "title": "Java Bean"
+    }
+   },
+   "request": {
+    "showOnStartList": "開始リストに表示する",
+    "startPerHttp": "はい、これは HTTP-Request / -Link で起動できます",
+    "title": "リクエスト"
+   },
+   "rest": {
+    "accept": "承認",
+    "acceptProperties": "プロパティを承認",
+    "body": "ボディ",
+    "client": "クライアント",
+    "contentType": "コンテンツタイプ",
+    "entityType": "エンティティタイプ",
+    "headers": "ヘッダー",
+    "jaxRs": "JAX-RS",
+    "kind": "種類",
+    "onError": "エラー発生時（接続、タイムアウトなど）",
+    "onNotSuccess": "ステータスコード失敗時 (2xx)",
+    "openApi": "OpenAPI",
+    "parameters": "パラメーター",
+    "properties": "プロパティ",
+    "readBodyType": "ボディをタイプとして読み取る（結果変数）",
+    "resource": "リソース",
+    "restConfigCreate": "REST クライアントを新規作成",
+    "restConfigOpen": "REST 構成を開く",
+    "resultType": "結果タイプ",
+    "service": "REST サービス"
+   },
+   "result": {
+    "paramter": "結果パラメーター",
+    "title": "結果"
+   },
+   "signal": {
+    "attachBusinessCase": "このプロセスを通知したビジネスケースに添付する",
+    "code": "シグナルコード",
+    "empty": "<< 空白 >>",
+    "emptyDesc": "すべてのシグナルを受信します",
+    "title": "シグナル"
+   },
+   "start": {
+    "inputParamters": "入力パラメーター",
+    "signature": "シグネチャ",
+    "title": "開始"
+   },
+   "task": {
+    "delay": "遅延",
+    "noTaskMessage": "（タスク）出力フローが接続されていません。",
+    "notification": "通知",
+    "options": "オプション",
+    "persist": "作成時にタスクを継続する",
+    "persistDisabled": "作成時にタスクを継続する（匿名ユーザーが許可されていない場合にのみ機能します）",
+    "priority": "優先度",
+    "skipTasklist": "タスクリストをスキップ",
+    "suppress": "抑制",
+    "task": "タスク",
+    "tasks": "タスク",
+    "template": "テンプレート"
+   },
+   "trigger": {
+    "attachBusinessCase": "このプロセスをトリガーしたビジネスケースに添付する",
+    "startTriggerable": "はい、これはトリガーアクティビティで開始できます",
+    "title": "トリガー"
+   },
+   "ws": {
+    "authMessage": "<a>プロセス</a>に関する Web サービス認証",
+    "client": "クライアント",
+    "clientCreate": "WebService クライアントを新規作成",
+    "clientOpen": "WebService 構成を開く",
+    "exception": "例外",
+    "exceptionHandling": "例外処理を使用する",
+    "operation": "オペレーション",
+    "port": "ポート",
+    "properties": "プロパティ",
+    "request": "リクエスト",
+    "title": "Web サービス"
+   },
+   "wsprocess": {
+    "auth": {
+     "httpBasic": "HTTP Basic",
+     "none": "なし／コンテナ",
+     "wsSecurity": "WS Security"
+    },
+    "authentication": "認証",
+    "qualifiedName": "修飾名",
+    "title": "Web サービスプロセス"
+   }
+  },
+  "label": {
+   "action": "アクション",
+   "allowAnonymous": "匿名を許可する",
+   "code": "コード",
+   "colorEdit": "色を編集",
+   "colorNew": "新しい色",
+   "column": "列",
+   "condition": "条件",
+   "customFields": "カスタムフィールド",
+   "database": "データベース",
+   "duration": "期間",
+   "editorLoading": "エディターを読み込み中...",
+   "editorPlaceholder": "CTRL + スペースキーを押すとオートコンプリートが有効化",
+   "empty": "結果が見つかりません。",
+   "enterDesc": "説明を入力してください",
+   "enterExpression": "式を入力してください",
+   "enterName": "名前を入力してください",
+   "enterUrl": "URL を入力してください",
+   "error": "エラー",
+   "expiry": "有効期限",
+   "expression": "式",
+   "mapped": "マッピング済み",
+   "message": "メッセージ",
+   "openCMS": "CMS エディターを開く",
+   "openCustomField": "カスタムフィールド構成を開く",
+   "openFile": "ファイルを開く",
+   "openUrl": "URL を開く",
+   "output": "出力",
+   "permission": "権限",
+   "process": "プロセス",
+   "removeRow": "行を削除する",
+   "request": "リクエスト",
+   "reset": "{{name}} をリセットする",
+   "responsible": "担当",
+   "timeout": "タイムアウト",
+   "URL": "URL",
+   "validationError": "違反エラー",
+   "warning": "警告"
+  },
+  "common": {
+   "hotkey": {
+    "help": "ヘルプを開く ({{hotkey}})",
+    "redo": "やり直す ({{hotkey}})",
+    "undo": "元に戻す ({{hotkey}})"
+   },
+   "label": {
+    "apply": "適用",
+    "attribute": "属性",
+    "browser": "ブラウザ",
+    "cancel": "キャンセル",
+    "category": "カテゴリー",
+    "color": "カラー",
+    "delete": "削除",
+    "description": "説明",
+    "mapping": "マッピング",
+    "name": "名前",
+    "roles": "ロール",
+    "save": "保存",
+    "search": "検索",
+    "settings": "設定",
+    "theme": "テーマ",
+    "type": "タイプ",
+    "value": "値",
+    "close": "閉じる",
+    "pin": "ログイン",
+    "refresh": "リフレッシュ"
+   }
+  },
+  "priority": {
+   "exception": "例外",
+   "high": "高",
+   "low": "低",
+   "normal": "ノーマル",
+   "script": "スクリプト"
+  },
+  "responsible": {
+   "delete": "誰もいないので削除",
+   "memberFromAttr": "属性からのメンバー",
+   "roleFromAttr": "属性からのロール",
+   "roles": "ロール",
+   "userFromAttr": "属性からのユーザー"
+  },
+  "title": {
+   "inscription": "インスクリプション"
+  },
+  "toolbar": {
+   "activities": "アクティビティ",
+   "allElements": "すべての要素",
+   "artifacts": "アーティファクト",
+   "customIcon": "カスタムアイコン",
+   "details": "インスクリプション",
+   "events": "イベント",
+   "extensions": "拡張子",
+   "gateways": "ゲートウェイ",
+   "grid": "グリッド",
+   "marquee": "マーキーツール ({{hotkey}})",
+   "openDataClass": "データクラスを開く ({{hotkey}})",
+   "openFormEditor": "フォームエディターを開く ({{hotkey}})",
+   "selection": "選択ツール"
+  }
+ }
+}

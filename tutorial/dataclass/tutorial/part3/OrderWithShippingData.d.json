@@ -1,0 +1,24 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "OrderWithShippingData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.8: an order, and the shipping cost a sub process calculates.",
+  "fields" : [ {
+      "name" : "item",
+      "comment" : "What was ordered"
+    }, {
+      "name" : "weight",
+      "type" : "Number",
+      "comment" : "Weight in kg"
+    }, {
+      "name" : "country",
+      "comment" : "Country code of the address"
+    }, {
+      "name" : "shipping",
+      "type" : "Number",
+      "comment" : "Shipping cost, from the sub process"
+    }, {
+      "name" : "confirmation",
+      "comment" : "What the customer is told"
+    } ]
+}

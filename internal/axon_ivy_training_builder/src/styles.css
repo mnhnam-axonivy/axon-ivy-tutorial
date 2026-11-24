@@ -1,0 +1,349 @@
+/* The training page, in a shadow root (src/index.js): it inherits nothing from the dialog's theme
+   and leaks nothing into it. Laid out like the skill-tree posts of nammai-blog: the map of skills
+   on the left, the card of the skill you picked on the right, shaped like a phone. On a phone the
+   map fills the screen and the card slides up over it, full screen, like a short video.
+   Light and dark follow the reader's system and are the two themes of nammai-blog: light is
+   Paper (warm paper, black ink, deep inks for the branches, white sheets that lift off the page,
+   a yellow highlighter for what matters), dark is Neon (black, neon colours, glowing edges).
+   Everything is set in Roboto, embedded (build.mjs, vendor/fonts) as "Ivy Training Roboto";
+   Japanese is drawn by the system's fonts. Each skill carries its branch's colour as --b.
+   .training is the backdrop: the whole width of the window and at least its height (src/index.js
+   takes the dialog's frame away). .st inside it is the layout: the map, a divider, the card. The
+   map takes --split of the width (40% at first); dragging the divider changes it (src/skilltree.js,
+   whose MAP_MIN, DIVIDER and CARD_MIN are the pixel widths below). */
+
+:host { all: initial; display: block; }
+
+/* Paper (light): the tokens of nammai-blog's themes/paper.css, with its skill tree's sheets */
+.training {
+  --bg: #fbf8f3; --ink: #1f1c18; --muted: #696358; --line: rgba(31, 28, 24, .14); --surface: #ffffff; --surface2: #f6f2ea;
+  --good: #2b8a3e; --bad: #d6336c; --on-accent: #ffffff;
+  --c-green: #2b8a3e; --c-cyan: #0e8a9c; --c-gold: #e3a008; --c-pink: #d6336c; --c-violet: #6f4bd8; --c-blue: #3b5bdb;
+  --mark: rgba(255, 206, 46, .55); /* the highlighter */
+  --lift: 0 1px 2px rgba(31, 28, 24, .05), 0 10px 28px -14px rgba(31, 28, 24, .22); /* a sheet resting on the page */
+  --lift-hi: 0 2px 4px rgba(31, 28, 24, .06), 0 18px 36px -16px rgba(31, 28, 24, .32);
+  --jp: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", Meiryo;
+  --font: "Ivy Training Roboto", Roboto, system-ui, var(--jp), sans-serif;
+  --b: var(--c-green);
+  display: block;
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+/* Neon (dark): the tokens of nammai-blog's themes/neon.css */
+@media (prefers-color-scheme: dark) {
+  .training {
+    --bg: #000000; --ink: #ffffff; --muted: #a3abbc; --line: #232838; --surface: #0b0c11; --surface2: #151822;
+    --good: #3fd193; --bad: #ff78b6; --on-accent: #000000;
+    --c-green: #3fd193; --c-cyan: #3cd3e6; --c-gold: #ffcf33; --c-pink: #ff78b6; --c-violet: #a48dff; --c-blue: #7096ff;
+  }
+}
+
+.st {
+  --split: 40%;
+  display: grid; grid-template-columns: clamp(340px, var(--split), calc(100% - 28px - 380px)) 28px minmax(0, 1fr); align-items: start;
+  padding: 8px 24px 24px;
+}
+.st.resizing { cursor: col-resize; user-select: none; -webkit-user-select: none; }
+.st *, .st *::before, .st *::after { box-sizing: border-box; }
+.st button { font: inherit; color: inherit; cursor: pointer; }
+.st :is(h1, h2, h3, p, ol) { margin: 0; }
+.st code { font: 500 .92em/1 var(--font); padding: 1px 5px; border-radius: 5px; background: var(--surface2); }
+
+/* ---------- the map ---------- */
+.st-map { width: 100%; min-width: 0; container: map / inline-size; }
+.st-brand { display: flex; align-items: center; gap: 10px; padding: 12px 0 4px; font: 700 15px/1.2 var(--font); }
+.st-mark { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--c-green); color: var(--on-accent); font: 700 12px/1 var(--font); letter-spacing: .02em; }
+.st-spacer { flex: 1; }
+.st-lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+.st-lang-btn { border: 0; padding: 5px 12px; background: none; color: var(--muted); font: 600 13px/1.2 var(--font); }
+.st-lang-btn[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.st-intro { padding: 10px 0 14px; }
+.st-kicker { font: 700 12px/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--b); }
+.st-intro h1 { font: 700 clamp(28px, 6vw, 38px)/1.08 var(--font); margin: 6px 0 8px; text-wrap: balance; word-break: auto-phrase; }
+.st-intro p:last-child { color: var(--muted); font-size: 16px; line-height: 1.5; }
+
+.st-head { position: sticky; top: 0; z-index: 5; padding: 10px 0 12px; background: linear-gradient(var(--bg) 88%, transparent); }
+.st-head-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 10px; }
+/* the branches: the heads of the map's columns */
+.st-cols { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); margin-top: 10px; }
+.st-col { justify-self: center; max-width: 100%; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--b); background: var(--surface);
+  font: 700 13px/1.2 var(--font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st-progress { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.st-count { font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.st-meter { flex: 1; max-width: 150px; height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.st-meter i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--good); transition: width .5s cubic-bezier(.2,.9,.2,1); }
+.st-tools { display: flex; gap: 6px; }
+.st-chip { padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 13px; line-height: 1; white-space: nowrap; }
+.st-chip[aria-pressed="true"] { border-color: var(--good); color: var(--good); }
+.st-finished { display: none; margin: 4px 0 8px; padding: 12px 14px; border: 1px solid var(--good); border-radius: 14px; line-height: 1.4; }
+.st.complete .st-finished { display: block; }
+.st-disclaimer { margin-top: 22px; text-align: center; font-size: 13px; color: var(--muted); }
+
+.st-grid { position: relative; display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); row-gap: 34px; padding: 10px 0 6px; }
+/* a level's heading: its name, how much of it is learned, and a line across the map */
+.st-level { grid-column: 1 / -1; position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; margin: 2px 0 -10px; }
+.st-level::after { content: ""; flex: 1; height: 0; border-top: 2px dashed var(--line); }
+.st-level-name { padding: 4px 10px; border-radius: 8px; background: var(--surface2); font: 700 11.5px/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; }
+.st-level-count { order: 2; font: 700 12px/1 var(--font); color: var(--muted); font-variant-numeric: tabular-nums; }
+.st-edges { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.st-edge { fill: none; stroke: var(--line); stroke-width: 3; stroke-linecap: round; }
+.st-edge[data-state="open"] { stroke: var(--muted); stroke-dasharray: 2 9; animation: st-march 1.2s linear infinite; }
+.st-edge[data-state="done"] { stroke: var(--good); }
+@keyframes st-march { to { stroke-dashoffset: -22; } }
+
+.st-node { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 0; border: 0; background: none; justify-self: center; width: 100%; max-width: 136px; }
+/* the root and the bosses sit across all the columns, a size bigger */
+.st-node.st-wide { max-width: 230px; }
+.st-node.st-wide .st-badge { width: 78px; height: 78px; border-width: 4px; }
+.st-node.st-wide .st-emo { font-size: 34px; }
+.st-node.st-wide .st-name { font-size: 15px; }
+.st-badge { position: relative; display: grid; place-items: center; width: 66px; height: 66px; border-radius: 50%;
+  background: var(--surface); border: 3px solid var(--b); transition: transform .18s, box-shadow .2s, border-color .2s; }
+.st-emo { font-size: 28px; line-height: 1; }
+.st-flag { position: absolute; right: -5px; bottom: -5px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
+  font-size: 12px; line-height: 1; background: var(--surface2); border: 2px solid var(--bg); }
+.st-name { font: 700 13px/1.2 var(--font); text-align: center; text-wrap: balance; overflow-wrap: anywhere; }
+.st-node:is(:hover, :focus-visible) .st-badge { transform: translateY(-3px) scale(1.05); }
+.st-node:focus-visible { outline: none; }
+.st-node:focus-visible .st-badge { outline: 3px solid var(--ink); outline-offset: 3px; }
+.st-node.on .st-badge { transform: scale(1.1); box-shadow: 0 0 0 5px color-mix(in srgb, var(--b) 25%, transparent); }
+/* locked: greyed out and dashed; ready: breathing; learned: filled in its colour, a tick */
+.st-node[data-state="locked"] .st-badge { border-color: var(--line); border-style: dashed; }
+.st-node[data-state="locked"] .st-emo { filter: grayscale(1); opacity: .4; }
+.st-node[data-state="locked"] .st-name { color: var(--muted); }
+.st-node:not([data-state="done"]) .st-flag { display: none; }
+.st-node[data-state="open"] .st-badge { animation: st-breathe 1.8s ease-in-out infinite; }
+.st-node[data-state="done"] .st-badge { background: color-mix(in srgb, var(--b) 24%, var(--surface)); }
+.st-node[data-state="done"] .st-flag { background: var(--good); color: var(--on-accent); font-weight: 700; }
+.st-node[data-state="done"] .st-flag::before { content: "✓"; }
+@keyframes st-breathe { 50% { transform: scale(1.07); } }
+
+/* ---------- the divider: a grip in the middle of the window, a line down the page while it is used ---------- */
+.st-split { position: relative; align-self: stretch; display: flex; justify-content: center; cursor: col-resize; touch-action: none; outline: none; }
+.st-split::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px; border-radius: 999px; background: var(--line); opacity: 0; transition: opacity .15s; }
+.st-grip { position: sticky; top: calc(50dvh - 28px); width: 6px; height: 56px; border-radius: 999px; background: var(--line); transition: background .15s, transform .15s; }
+.st-split:hover::before, .st-split:focus-visible::before, .st.resizing .st-split::before { opacity: 1; }
+.st-split:hover .st-grip, .st.resizing .st-grip { background: var(--muted); transform: scaleX(1.3); }
+.st-split:focus-visible .st-grip { background: var(--ink); outline: 3px solid var(--ink); outline-offset: 3px; }
+
+/* ---------- the card ---------- */
+/* As wide as the divider leaves it. The tabs, the foot and the film use all of it; what is read
+   (the facts, the check, the puzzle's brief) keeps to a column of at most 820 px in its middle (--rim each side). */
+.st-card { --rim: max(0px, calc((100% - 820px) / 2)); position: sticky; top: 12px; display: flex; flex-direction: column; height: calc(100dvh - 24px); min-height: 540px;
+  margin-top: 12px; border: 1px solid var(--line); border-radius: 30px; background: var(--surface); overflow: hidden; outline: none; }
+.st-top { display: flex; align-items: center; gap: 10px; padding: 12px 12px 4px 14px; }
+.st-tabs { flex: 1; min-width: 0; display: flex; gap: 4px; }
+.st-tab { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; padding: 9px 2px 12px;
+  border: 0; border-radius: 12px; background: none; color: var(--muted); transition: background .15s, color .15s; }
+.st-tab-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 13.5px/1.2 var(--font); letter-spacing: .01em; }
+.st-tab::after { content: ""; position: absolute; left: 20%; right: 20%; bottom: 0; height: 3px; border-radius: 999px; background: var(--line); }
+.st-tab:hover { color: var(--ink); }
+.st-tab[data-done="true"]::after { background: var(--good); }
+.st-tab[aria-selected="true"] { color: var(--ink); background: var(--surface2); }
+.st-tab[aria-selected="true"]::after { background: var(--b); }
+.st-tab:focus-visible { outline: 3px solid var(--ink); outline-offset: 1px; }
+.st-close { flex: none; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%; background: var(--surface2); font-size: 15px; line-height: 1; }
+.st-body { flex: 1; min-height: 0; overflow-y: auto; padding: 10px calc(20px + var(--rim)) 14px; display: flex; flex-direction: column; gap: 12px; animation: st-in .28s ease-out; }
+@keyframes st-in { from { opacity: 0; transform: translateY(14px); } }
+/* what's on a screen sits in the middle of it when there is room, and scrolls from the top when not */
+.st-body > :first-child { margin-top: auto; }
+.st-body > :last-child { margin-bottom: auto; }
+.st-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px;
+  padding: 10px 16px calc(14px + env(safe-area-inset-bottom, 0px)); }
+.st-foot .st-btn { flex: none; min-height: 40px; padding: 8px 18px; border-radius: 12px; font-size: 14.5px; }
+.st-foot .st-btn.ghost { width: 40px; padding: 0; margin-right: auto; font-size: 20px; line-height: 1; }
+.st-welcome + .st-foot { justify-content: center; }
+
+.st-hook { font-weight: 500; font-size: 15px; line-height: 1.35; color: var(--muted); }
+.st-word { font: 700 clamp(30px, 7vw, 38px)/1.05 var(--font); color: var(--b); text-wrap: balance; }
+.st-def { font-size: 17px; line-height: 1.5; }
+.st-def strong { color: var(--b); }
+.st-link { display: inline; padding: 0 2px; border: 0; border-bottom: 2px solid var(--b); background: none; font-weight: 700; line-height: inherit; }
+
+.st-btn { min-height: 50px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface2);
+  font: 700 16px/1.2 var(--font); transition: transform .12s, background .15s, border-color .15s; }
+.st-btn:active { transform: scale(.97); }
+.st-btn.primary { border-color: var(--b); background: var(--b); color: var(--on-accent); }
+.st-btn:disabled { cursor: default; }
+.st-btn:focus-visible, .st-chip:focus-visible, .st-close:focus-visible, .st-link:focus-visible, .st-lang-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.st-big { font-size: 56px; line-height: 1; text-align: center; }
+
+/* ---------- watch: the film, then the skill in one sentence ---------- */
+/* The film takes the card's width, as far as the card's height lets it keep its subtitle and
+   controls in view: nothing else is under it, so the body does not scroll. The skill's sentence
+   comes up over the film when it ends (.tf-end). */
+.st-body.st-watch { container: watch / size; overflow-y: auto; gap: 16px; padding-inline: 20px; }
+.st-film { flex: none; display: flex; flex-direction: column; }
+.st-short-word { font: 700 13px/1.2 var(--font); letter-spacing: .04em; text-transform: uppercase; color: var(--b); }
+
+/* The end card: the skill in one sentence, over the dimmed last picture, once the film has ended.
+   Dark in both themes, like the film; its letters grow with the screen (cq units: .tf-end). The
+   big replay button gives way to it (replay is still under the film). */
+.tf-end { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; padding: 6%; container-type: inline-size;
+  background: rgba(9, 12, 24, .74); opacity: 0; visibility: hidden; transition: opacity .35s, visibility 0s .35s; }
+.tf-show[data-state="ended"] .tf-end { opacity: 1; visibility: visible; transition: opacity .35s; }
+.tf-show[data-state="ended"] .tf-bigplay { display: none; }
+.tf-end-in { --hi: color-mix(in srgb, var(--b) 55%, #ffffff); display: grid; gap: .5em; max-width: 34em; max-height: 100%; overflow: auto; padding: 1em 1.25em;
+  border: 1px solid rgba(251, 245, 230, .16); border-radius: 14px; background: rgba(20, 26, 46, .94); color: #fbf5e6; cursor: auto; font-size: clamp(13px, 3.3cqw, 19px); }
+.tf-end-in .st-short-word { font-size: .78em; color: var(--hi); }
+.tf-end-in .st-def { font-size: 1em; line-height: 1.5; }
+.tf-end-in .st-def strong { color: var(--hi); background: none; }
+.tf-end-in .st-link { border-bottom-color: var(--hi); }
+.tf-end-in .st-link:focus-visible { outline-color: #fbf5e6; }
+
+/* The film: a screen like a short explainer film's, the same in both themes: a grainy navy
+   backdrop, the drawing on top. The subtitle sits under the picture, then play/pause, the
+   scrubber and replay. The screen is the biggest 4:3 box as wide as the body that leaves room
+   for them in the body's height (cq units: the body, .st-watch), and never under 240 px wide. */
+.tf-show { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+.tf-frame { display: grid; place-items: center; }
+.tf-screen { --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .14 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  position: relative; isolation: isolate; width: max(min(100cqw, 240px), min(100cqw, (100cqh - 118px) * 4 / 3)); aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden; cursor: pointer;
+  background: var(--grain), radial-gradient(ellipse 72% 68% at 50% 44%, #28385e 0%, #1b2643 58%, #0d1325 100%); }
+.tf-svg { position: absolute; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; }
+.tf-bigplay { position: absolute; left: 50%; top: 50%; z-index: 2; display: grid; place-items: center; width: 72px; height: 72px; padding: 0;
+  border: 2px solid rgba(251,245,230,.55); border-radius: 50%; background: rgba(14,18,32,.72); color: #fbf5e6; transform: translate(-50%, -50%); transition: transform .15s, background .15s; }
+.tf-bigplay[hidden] { display: none; }
+.tf-bigplay:hover { transform: translate(-50%, -50%) scale(1.06); background: rgba(14,18,32,.86); }
+.tf-bigplay svg { width: 32px; height: 32px; fill: currentColor; }
+.tf-sub { min-height: calc(3 * 1.4em); max-width: 720px; align-self: center; font-weight: 500; font-size: 15.5px; line-height: 1.4; text-align: center; text-wrap: balance; }
+.tf-pbar { display: flex; align-items: center; gap: 10px; }
+.tf-pbtn { flex: none; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface2); }
+.tf-pbtn svg { width: 17px; height: 17px; fill: currentColor; }
+.tf-scrub { flex: 1; display: flex; align-items: center; height: 30px; cursor: pointer; touch-action: none; }
+.tf-scrub span { position: relative; flex: 1; height: 6px; border-radius: 999px; background: var(--line); }
+.tf-scrub i { position: relative; display: block; height: 100%; width: 0; border-radius: inherit; background: var(--b); }
+.tf-scrub i::after { content: ""; position: absolute; right: -7px; top: 50%; width: 14px; height: 14px; border-radius: 50%; background: var(--b); transform: translateY(-50%) scale(.8); transition: transform .15s; }
+.tf-scrub:is(:hover, .on, :focus-visible) i::after { transform: translateY(-50%) scale(1.1); }
+.tf-pbtn:focus-visible, .tf-scrub:focus-visible, .tf-bigplay:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* ---------- myths: a card per thing people think; a tap turns it over to what is true ---------- */
+.st-myths-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.st-flip-hint { font-size: 13px; line-height: 1.2; color: var(--muted); text-align: right; }
+.st-flips { display: grid; gap: 10px; }
+.st-flip { perspective: 1000px; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+/* both sides share one cell, so the card is as tall as the taller of the two */
+.st-flip-in { display: grid; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.2,.85,.25,1); }
+.st-flip.on .st-flip-in { transform: rotateX(180deg); }
+.st-face { grid-area: 1 / 1; display: grid; align-content: center; gap: 6px; padding: 12px 14px; border-radius: 16px; border: 2px solid var(--line); background: var(--surface2);
+  backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.st-face.back { transform: rotateX(180deg); border-color: var(--good); }
+.st-face small { font: 700 11.5px/1.2 var(--font); letter-spacing: .06em; text-transform: uppercase; }
+.st-face.front small { color: var(--bad); }
+.st-face.back small { color: var(--good); }
+.st-face p { line-break: strict; }
+.st-face.front p { font: 700 16.5px/1.35 var(--font); text-wrap: balance; word-break: auto-phrase; }
+.st-face.back p { font-size: 15px; line-height: 1.45; }
+.st-flip:hover .st-face.front { border-color: var(--muted); }
+.st-flip:focus-visible .st-face { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* ---------- the check ---------- */
+.st-q { font: 700 22px/1.25 var(--font); text-wrap: balance; }
+.st-opts { display: grid; gap: 9px; }
+.st-btn.st-opt { text-align: left; font-weight: 600; }
+.st-btn.st-opt.right { border-color: var(--good); background: color-mix(in srgb, var(--good) 20%, var(--surface2)); opacity: 1; }
+.st-btn.st-opt.wrong { border-color: var(--bad); opacity: .55; animation: st-shake .35s; }
+.st-btn.st-opt:disabled:not(.right, .wrong) { opacity: .5; }
+.st-result { display: grid; gap: 8px; }
+.st-right { font: 700 22px/1.2 var(--font); color: var(--good); }
+.st-wrong { font-weight: 700; color: var(--bad); }
+.st-why { font-size: 16px; line-height: 1.5; }
+@keyframes st-shake { 25% { transform: translateX(-5px) rotate(-1deg); } 75% { transform: translateX(5px) rotate(1deg); } }
+
+.st-lockcard, .st-welcome { text-align: center; }
+.st-lockcard .st-btn.st-opt { text-align: center; }
+.st-steps { display: grid; gap: 10px; padding: 0; list-style: none; text-align: left; font-size: 16px; line-height: 1.4; }
+.st-steps li { padding: 12px 14px; border-radius: 16px; background: var(--surface2); }
+
+/* confetti out of the middle of the card when a skill is learned */
+.st-burst { position: absolute; left: 50%; top: 45%; pointer-events: none; z-index: 3; }
+.st-burst i { position: absolute; font-style: normal; font-size: 24px; animation: st-fly .9s cubic-bezier(.1,.7,.3,1) forwards; }
+@keyframes st-fly { to { transform: translate(var(--dx), var(--dy)) rotate(200deg); opacity: 0; } }
+
+/* ---------- puzzles ---------- */
+/* on the map: how many puzzles are solved */
+.st-pzcount { flex: none; font-weight: 700; font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--muted); }
+
+/* The puzzle game: a dialog over the whole page. Everything in it is drawn by three.js on one
+   canvas (src/puzzle/); the page adds only a line that reads the game out and a close button
+   that shows when the keyboard reaches it. Dark in both themes, like the Designer it shows. */
+.pz { position: fixed; inset: 0; z-index: 2147483000; background: #0f1116; color: #e9ebf1; outline: none; overscroll-behavior: contain; }
+.pz-canvas { display: block; width: 100%; height: 100%; touch-action: none; user-select: none; -webkit-user-select: none; }
+.pz-live { position: absolute; left: 0; top: 0; width: 1px; height: 1px; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.st .pz-close { position: absolute; top: 10px; left: 50%; z-index: 1; padding: 8px 14px; border: 2px solid #e9ebf1; border-radius: 10px; background: #1a1c23; color: #e9ebf1;
+  font-weight: 700; font-size: 14px; transform: translate(-50%, -80px); }
+.st .pz-close:focus-visible { transform: translate(-50%, 0); outline: none; }
+.pz-none { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 24px; text-align: center; font-size: 17px; line-height: 1.5; }
+
+/* ---------- a wide map (a wide window, or the divider moved right): bigger skills ---------- */
+@container map (min-width: 680px) {
+  .st-node { max-width: 160px; }
+  .st-node.st-wide { max-width: 260px; }
+  .st-badge { width: 76px; height: 76px; }
+  .st-emo { font-size: 32px; }
+  .st-name { font-size: 14px; }
+  .st-node.st-wide .st-badge { width: 90px; height: 90px; }
+  .st-node.st-wide .st-emo { font-size: 40px; }
+  .st-node.st-wide .st-name { font-size: 16px; }
+  .st-col { font-size: 14px; padding: 5px 12px; }
+}
+
+/* ---------- what each theme adds: Paper's sheets and highlighter, Neon's glow ----------
+   As nammai-blog's themes give its skill trees (themes/paper.css, themes/neon.css), and the same
+   for what only this page has (the language switch, the branches' heads, the skill picked). */
+@media not (prefers-color-scheme: dark) {
+  .st-badge { box-shadow: var(--lift); }
+  .st-node[data-state="locked"] .st-badge { box-shadow: none; background: transparent; }
+  .st-node:is(:hover, :focus-visible) .st-badge { box-shadow: var(--lift-hi); }
+  .st-node.on .st-badge { box-shadow: 0 0 0 5px color-mix(in srgb, var(--b) 22%, transparent), var(--lift-hi); }
+  .st-card { box-shadow: var(--lift-hi); }
+  .st-chip, .st-lang, .st-col { box-shadow: var(--lift); }
+  .st-lang-btn[aria-pressed="true"] { background: var(--ink); color: #ffffff; }
+  /* the words that matter, swiped with the highlighter */
+  .st-def strong { color: inherit; background: linear-gradient(100deg, transparent 1%, var(--mark) 5%, var(--mark) 95%, transparent 99%) 0 70% / 100% 55% no-repeat; }
+}
+@media (prefers-color-scheme: dark) {
+  .st-node[data-state="open"] .st-badge { box-shadow: 0 0 0 1px var(--b), 0 0 22px -2px var(--b); }
+  .st-node[data-state="done"] .st-badge { box-shadow: 0 0 18px -6px var(--b), inset 0 0 18px -6px var(--b); }
+  .st-node.on .st-badge { box-shadow: 0 0 0 5px color-mix(in srgb, var(--b) 28%, transparent), 0 0 26px -2px var(--b); }
+  .st-node[data-state="open"] .st-name { text-shadow: 0 0 10px var(--b); }
+  .st-edge[data-state="done"] { filter: drop-shadow(0 0 4px var(--good)); }
+  .st-meter i { box-shadow: 0 0 10px var(--good); }
+  .st-card { box-shadow: 0 0 0 1px color-mix(in srgb, var(--b) 45%, transparent), 0 0 60px -18px var(--b); }
+  .st-word { text-shadow: 0 0 22px color-mix(in srgb, var(--b) 60%, transparent); }
+  .st-btn.primary { box-shadow: 0 0 22px -6px var(--b); }
+  .st-tab[aria-selected="true"]::after { box-shadow: 0 0 8px var(--b); }
+  .st-col { box-shadow: 0 0 10px -4px var(--b); }
+  /* the language switch: a black pill, the language on show lit violet */
+  .st-lang { background: #000000; }
+  .st-lang-btn[aria-pressed="true"] { background: var(--c-violet); color: #000000; box-shadow: 0 0 16px -2px var(--c-violet); }
+}
+
+/* ---------- phones: the map is the page; the card slides up over everything ---------- */
+@media (max-width: 860px) {
+  .st { display: block; padding: 4px 16px 40px; }
+  .st-split { display: none; }
+  .st-map { max-width: 590px; margin: 0 auto; }
+  .st-card { position: fixed; inset: 0; z-index: 40; height: auto; min-height: 0; margin: 0; border: 0; border-radius: 0;
+    transform: translateY(103%); visibility: hidden; transition: transform .3s cubic-bezier(.2,.9,.2,1), visibility 0s .3s; }
+  .st.open .st-card { transform: none; visibility: visible; transition: transform .3s cubic-bezier(.2,.9,.2,1); }
+  .st-top { padding-top: calc(14px + env(safe-area-inset-top, 0px)); }
+  .st-body { padding: 12px calc(18px + var(--rim)) 16px; gap: 14px; }
+}
+/* a narrow map (a phone, or the divider moved left): smaller skills */
+@container map (max-width: 480px) {
+  .st-badge { width: 54px; height: 54px; }
+  .st-emo { font-size: 23px; }
+  .st-name { font-size: 11.5px; }
+  .st-col { font-size: 11.5px; padding: 3px 6px; }
+  .st-grid { row-gap: 28px; }
+  .st-tools .st-chip { padding: 7px 9px; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .st *, .st *::before { animation: none !important; transition: none !important; }
+}

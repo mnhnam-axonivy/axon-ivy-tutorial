@@ -1,0 +1,17 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/data-class.json",
+  "simpleName" : "ReserveRoomData",
+  "namespace" : "tutorial.part3",
+  "comment" : "Guide 3.10: what the callable sub process works with.",
+  "fields" : [ {
+      "name" : "room",
+      "comment" : "Name of the room"
+    }, {
+      "name" : "people",
+      "type" : "Number",
+      "comment" : "How many people"
+    }, {
+      "name" : "reservation",
+      "comment" : "Number of the reservation"
+    } ]
+}

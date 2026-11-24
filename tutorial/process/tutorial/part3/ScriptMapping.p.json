@@ -1,0 +1,62 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E531",
+  "config" : {
+    "data" : "tutorial.part3.ScriptMappingData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Order",
+      "config" : {
+        "signature" : "order",
+        "input" : {
+          "params" : [
+            { "name" : "customer", "type" : "String", "desc" : "Who orders" },
+            { "name" : "quantity", "type" : "Number", "desc" : "How many pieces" },
+            { "name" : "unitPrice", "type" : "Number", "desc" : "Price of one piece" }
+          ],
+          "map" : {
+            "out.customer" : "param.customer",
+            "out.quantity" : "param.quantity",
+            "out.unitPrice" : "param.unitPrice"
+          }
+        },
+        "request" : {
+          "name" : "3.1 Mapping values"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Calculate the total",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.total" : "in.quantity * in.unitPrice",
+            "out.status" : "\"calculated\""
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 256, "y" : 64 },
+        "description" : "Guide 3.1: two values set in the mapping table, no code."
+      },
+      "connect" : [
+        { "id" : "f4", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 416, "y" : 64 }
+      }
+    } ]
+}

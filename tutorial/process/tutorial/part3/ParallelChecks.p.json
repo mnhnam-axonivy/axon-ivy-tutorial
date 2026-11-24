@@ -1,0 +1,138 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E537",
+  "config" : {
+    "data" : "tutorial.part3.ParallelChecksData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Check an applicant",
+      "config" : {
+        "signature" : "check",
+        "input" : {
+          "params" : [
+            { "name" : "name", "type" : "String", "desc" : "Name of the applicant" }
+          ],
+          "map" : {
+            "out.name" : "param.name"
+          }
+        },
+        "request" : {
+          "name" : "3.7 Two paths at the same time"
+        }
+      },
+      "connect" : [
+        { "id" : "f10", "to" : "f2" }
+      ],
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      }
+    }, {
+      "id" : "f2",
+      "type" : "Split",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out1" : "in",
+            "out2" : "in"
+          }
+        }
+      },
+      "connect" : [
+        { "id" : "f21", "to" : "f3", "via" : [ { "x" : 224, "y" : 64 } ], "outVar" : "out1" },
+        { "id" : "f22", "to" : "f4", "via" : [ { "x" : 224, "y" : 256 } ], "outVar" : "out2" }
+      ],
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 },
+        "description" : "Guide 3.7: both paths get a copy of the data."
+      }
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Check credit",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "in.credit = \"ok\";",
+            "ivy.log.info(\"Credit of \" + in.name + \": \" + in.credit);"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f31", "to" : "f5", "via" : [ { "x" : 544, "y" : 64 } ], "var" : "in1" }
+      ],
+      "visual" : {
+        "at" : { "x" : 384, "y" : 64 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "Script",
+      "name" : "Check references",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "in.references = \"good\";",
+            "ivy.log.info(\"References of \" + in.name + \": \" + in.references);"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f32", "to" : "f5", "via" : [ { "x" : 544, "y" : 256 } ], "var" : "in2" }
+      ],
+      "visual" : {
+        "at" : { "x" : 384, "y" : 256 }
+      }
+    }, {
+      "id" : "f5",
+      "type" : "Join",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in1",
+            "out.references" : "in2.references"
+          }
+        }
+      },
+      "connect" : [
+        { "id" : "f11", "to" : "f6" }
+      ],
+      "visual" : {
+        "at" : { "x" : 544, "y" : 160 },
+        "description" : "Guide 3.7: waits for both paths; the data of the first path, and the references of the second."
+      }
+    }, {
+      "id" : "f6",
+      "type" : "Script",
+      "name" : "Decide",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in"
+          },
+          "code" : [
+            "out.decision = in.credit == \"ok\" && in.references == \"good\" ? \"accepted\" : \"rejected\";",
+            "ivy.log.info(in.name + \": \" + out.decision);"
+          ]
+        }
+      },
+      "connect" : [
+        { "id" : "f12", "to" : "f7" }
+      ],
+      "visual" : {
+        "at" : { "x" : 688, "y" : 160 }
+      }
+    }, {
+      "id" : "f7",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 832, "y" : 160 }
+      }
+    } ]
+}

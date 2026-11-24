@@ -1,0 +1,109 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/14.0/project/process.json",
+  "id" : "19F4A2C1B0D3E521",
+  "config" : {
+    "data" : "tutorial.part2.ProcessElementsData"
+  },
+  "elements" : [
+    {
+      "id" : "f0",
+      "type" : "RequestStart",
+      "name" : "Order received",
+      "config" : {
+        "signature" : "receiveOrder",
+        "input" : {
+          "params" : [
+            {
+              "name" : "amount",
+              "type" : "Number",
+              "desc" : "Amount of the order"
+            }
+          ],
+          "map" : {
+            "out.amount" : "param.amount"
+          }
+        },
+        "request" : {
+          "name" : "2.1 Receive an order"
+        }
+      },
+      "visual" : {
+        "at" : {
+          "x" : 96,
+          "y" : 64
+        },
+        "description" : "Starts when a customer sends an order."
+      },
+      "connect" : [
+        {
+          "id" : "f2",
+          "to" : "f3"
+        }
+      ]
+    },
+    {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Calculate the price",
+      "config" : {
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.total" : "in.amount < 100 ? in.amount + 9 : in.amount"
+          }
+        }
+      },
+      "tags" : [
+        "order",
+        "pricing"
+      ],
+      "visual" : {
+        "at" : {
+          "x" : 256,
+          "y" : 64
+        },
+        "description" : "Adds 9 for shipping. Orders of 100 or more ship for free."
+      },
+      "connect" : [
+        {
+          "id" : "f4",
+          "to" : "f5"
+        }
+      ]
+    },
+    {
+      "id" : "f5",
+      "type" : "Script",
+      "name" : "Confirm the order",
+      "config" : {
+        "output" : {
+          "code" : "ivy.log.info(\"Order confirmed, total \" + in.total);"
+        }
+      },
+      "visual" : {
+        "at" : {
+          "x" : 416,
+          "y" : 64
+        }
+      },
+      "connect" : [
+        {
+          "id" : "f6",
+          "to" : "f1"
+        }
+      ]
+    },
+    {
+      "id" : "f1",
+      "type" : "TaskEnd",
+      "name" : "Order done",
+      "visual" : {
+        "at" : {
+          "x" : 576,
+          "y" : 64
+        }
+      }
+    }
+  ],
+  "description" : "Guide 2.1: an order is received, priced and confirmed."
+}
